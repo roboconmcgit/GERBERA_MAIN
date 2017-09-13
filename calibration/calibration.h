@@ -3,9 +3,9 @@
 #define CALIBRATION_H_
 
 #include "ev3api.h"
-#include "Ang_Robo.h" //it will be changed to Ang_Robo
 #include "ColorParts.h"
 #include "TouchParts.h"
+#include "MotorParts.h"
 
 
 // using宣言
@@ -30,7 +30,11 @@ public:
         gTouchParts(Touch),
         gMotorParts(motor)
     {};   //コンストラクタ
-    ~calibration(){};                      //デストラクタ
+    ~calibration(){
+ //       delete gColorParts;
+ //       delete gTouchParts;
+ //       delete gMotorParts;
+    };                      //デストラクタ
     int set_calibration();
                                         //キャリブレーションを設定する
 };

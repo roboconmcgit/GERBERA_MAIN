@@ -76,12 +76,12 @@ int32_t GyroParts::GetGyroPartsData(){
 }
 
 //*****************************************************************************
-// 関数名 : det_Dansa
+// 関数名 : GyroPartsTask
 // 引数 : unused
 // 返り値 : なし
 // 概要 : 
 //*****************************************************************************
-void GyroParts::det_Dansa() {
+void GyroParts::GyroPartsTask() {
 	int cnt;
 	gyro_250d[0] = GetGyroPartsData();
   

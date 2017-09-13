@@ -6,7 +6,10 @@
 #define CONTROLLER_H_
 
 #include "ev3api.h"
-#include "Cruise.h"
+#include "app.h"
+#include "CruiseCtrl.h"
+#include "DifficultCtrl.h"
+#include "Brain_Calc_Library.h"
 
 #include "ColorParts.h"
 #include "MotorParts.h"
@@ -14,22 +17,99 @@
 #include "SonarParts.h"
 #include "TouchParts.h"
 
+#include <deque>
+
+using namespace std;
+
+enum Sys_Mode{
+    SYS_INIT            = 110,
+    BT_CONECT           = 120,
+    DISPLAY_SELECT_APLI = 210,
+    CALIB_COLOR_SENSOR  = 310,
+    WAIT_FOR_START      = 410,
+    START               = 510,
+    RUN                 = 530,
+    LINE_TRACE_MODE     = 520,
+    GOAL                = 610,
+    DANSA               = 710,
+    GARAGE              = 810,
+    LUP                 = 910,
+    STOP                = 1010,
+    RESET               = 0
+};
+
 /*
  *  関数のプロトタイプ宣言
  */
  
 class Controller{
 private:
+    CruiseCtrl  *gCruiseCtrl;
+#if 0
+    DifficultCtrl *gDifficultCtrl;
+#endif
+    Balancer    *gBalancer;
+
     ColorParts  *gColorParts;
     MotorParts  *gMotorParts;
     GyroParts   *gGyroParts;
     SonarParts  *gSonarParts;
     TouchParts  *gTouchParts;
 
-//protected:
-    Cruise              *mC_Cruise;                   //走行制御用のクラスポインタ
+    BrainCalcLibrary *gStep = new BrainCalcLibrary();       //段差走行オブジェクト（脳みそ計算ライブラリ）
+    
+    bool  mGarage = false;
+    int32_t mSonar;
 
+    enum enumTrack_Mode{
+        Start_to_1st_Straight,
+        Start_to_1st_Corner,
+        Fst_Corner,
+        Snd_Corner,
+        Final_Corner,
+        Final_Straight,
+        Dead_Zone,
+        Return_to_Line,
+        Go_Step,
+        Approach_to_Garage,
+        Return_to_Line_Garage,
+        Garage_In,
+        Stop_Robo,
+        Go_LUG,
+        Track_Debug_00,
+        Track_Debug_01,
+        Track_Debug_02
+    };
+    enumTrack_Mode  Track_Mode;
+
+    int   mLinevalue; //ライン検出値
+    int   mLinevalue_LUG;
+    float mXvalue;    //x座標
+    float mYvalue;    //y座標
+    float mOdo;       //Total distance [mm] from start point
+    float mSpeed;     //速度
+    float mYawrate;   //ヨーレート
+    float mYawangle;  //ヨー角
+    int   mTail_angle;
+    //signals for robo movement
+    bool  mRobo_stop       = 0;
+    bool  mRobo_forward    = 0;
+    bool  mRobo_back       = 0;
+    bool  mRobo_turn_left  = 0;
+    bool  mRobo_turn_right = 0;
+//protected:
 public:
+    Sys_Mode mSys_Mode;
+
+    int SysModeNum;
+    int   Mmode;
+    bool  mRobo_balance_mode;
+
+	int   forward;         //前進目標値
+	float yawratecmd;      //目標ヨーレート
+	float anglecommand;    //尻尾角度
+    bool  tail_mode_lflag; //倒立走行フラグ
+    
     Controller(
         ColorParts  *Color,
         MotorParts  *Motor,
@@ -37,7 +117,12 @@ public:
         SonarParts  *Sonar,
         TouchParts  *Touch);            //コンストラクタ
     ~Controller();                                 //デストラクタ
+    void ControllerInit();
     void ControllerOperation();                    //動作判断
+
+	void init();
+	//走行戦略を計算
+	void Track_run();
 };
 
 #endif // !CONTROLLER_H_

@@ -18,10 +18,7 @@
 // コントローラクラス
 #include "Controller.h"
 
-//anagoサブシステム
-#include "ang_brain.h"
-#include "Ang_Robo.h" //it will be changed to Ang_Robo
-
+// キャリブレーション
 #include "calibration.h"
 
 // デストラクタ問題の回避
@@ -29,32 +26,8 @@
 void *__dso_handle=0;
 
 // using宣言
-
-enum Sys_Mode{
-    SYS_INIT            = 110,
-    BT_CONECT           = 120,
-    DISPLAY_SELECT_APLI = 210,
-    CALIB_COLOR_SENSOR  = 310,
-    WAIT_FOR_START      = 410,
-    START               = 510,
-    RUN                 = 530,
-    LINE_TRACE_MODE     = 520,
-    GOAL                = 610,
-    DANSA               = 710,
-    GARAGE              = 810,
-    LUP                 = 910,
-    STOP                = 1010,
-    RESET               = 0
-};
-
-Sys_Mode mSys_Mode;
-
 static int32_t   bt_cmd = 0;      /* Bluetoothコマンド 1:リモートスタート */
 static FILE     *bt     = NULL;   /* Bluetoothファイルハンドル */
-
-static Ang_Brain *gAng_Brain;
-static Ang_Robo  *gAng_Robo;
-static Balancer  *gBalancer;
 
 static ColorParts  *gColorParts;
 static MotorParts  *gMotorParts;
@@ -63,8 +36,6 @@ static SonarParts  *gSonarParts;
 static TouchParts  *gTouchParts;
 
 static Controller  *gController;
-
-static bool       IsStart;
 
 #ifdef LOG_RECORD
 static int   log_size = 15000;
@@ -88,15 +59,15 @@ static float log_fdat_02[15000];
 static void sys_initialize() {
   int  battery;
   char battery_str[32];
+  int gyro = 0;
+  char gyro_str[32];
 
-  IsStart = false;
   ParamFileRead fileRead;
   fileRead.fileRead();
   fileRead.setParameters();
 
   // [TODO] タッチセンサの初期化に2msのdelayがあるため、ここで待つ
   tslp_tsk(2);
-  mSys_Mode=SYS_INIT;
   
   // オブジェクトの作成
   gColorParts = new ColorParts();
@@ -107,12 +78,8 @@ static void sys_initialize() {
 
   gController = new Controller(gColorParts,gMotorParts,gGyroParts,gSonarParts,gTouchParts);
 
-  gBalancer  = new Balancer();
-  
-  gAng_Brain = new Ang_Brain();
-  gAng_Robo  = new Ang_Robo(gGyroParts,
-			                      gMotorParts,
-			                      gBalancer);
+  gController->mSys_Mode=SYS_INIT;
+
   gMotorParts->tail_reset();
   gMotorParts->tail_stand_up();
 
@@ -132,16 +99,34 @@ static void sys_initialize() {
 
   while(1){
     if (gTouchParts->GetTouchPartsData()){
+      gGyroParts->GyroPartsReset();
+      gController->ControllerInit();
       break; /* タッチセンサが押された */
     }
+    gyro = gGyroParts->GetGyroPartsData();  // ジャイロセンサ値
+    sprintf(gyro_str, "Gyro:%d", gyro);
+    ev3_lcd_draw_string(gyro_str,0, 100);
+
     tslp_tsk(10); //What dose it mean? kota 170812
   }
   ev3_speaker_play_tone(NOTE_E4,200);
   ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
 
-  gGyroParts->GyroPartsReset();
-  gAng_Robo->init();  //
-  gAng_Brain->init(); //initialize mode
+  tslp_tsk(500);
+  
+  while(1){
+    if (gTouchParts->GetTouchPartsData()){
+      break; /* タッチセンサが押された */
+    }
+    gyro = gGyroParts->GetGyroPartsData();  // ジャイロセンサ値
+    sprintf(gyro_str, "Gyro:%d", gyro);
+    ev3_lcd_draw_string(gyro_str,0, 100);
+    tslp_tsk(20); //What dose it mean? kota 170812
+    ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
+  }
+  ev3_speaker_play_tone(NOTE_E4,200);
+  ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
+    
 
   /* Open Bluetooth file */
   bt = ev3_serial_open_file(EV3_SERIAL_BT);
@@ -167,14 +152,12 @@ static void sys_initialize() {
 //*****************************************************************************
 //Systen Destroy
 static void sys_destroy(){
-  delete gAng_Brain;
-  delete gAng_Robo;
   delete gColorParts;
   delete gMotorParts;
   delete gGyroParts;
   delete gSonarParts;
   delete gTouchParts;
-  delete gBalancer;
+  delete gController;
 }
 
 //*****************************************************************************
@@ -186,10 +169,10 @@ static void sys_destroy(){
 #ifdef LOG_RECORD
 static void log_dat( ){
 
-  log_dat_00[log_cnt]  = gAng_Brain->tail_mode_lflag;
-  log_dat_01[log_cnt]  = gAng_Robo->balance_mode;
+  log_dat_00[log_cnt]  = 0;
+  log_dat_01[log_cnt]  = 0;
   log_dat_02[log_cnt]  = gSonarParts->sonarDistance;
-  log_dat_03[log_cnt]  = gAng_Brain->forward;
+  log_dat_03[log_cnt]  = 0;
   log_fdat_00[log_cnt] = gMotorParts->abs_angle;
   log_fdat_01[log_cnt] = 0;
   log_fdat_02[log_cnt] = gMotorParts->odo;
@@ -255,42 +238,11 @@ void eye_task(intptr_t exinf) {
   } else {
     gColorParts->ColorPartsTask();
     gMotorParts->WheelOdometry(dT_4ms);
-    gGyroParts->det_Dansa();
+    gGyroParts->GyroPartsTask();
     gSonarParts->SonarPartsTask();
+    gTouchParts->TouchPartsTask();
 
-    gAng_Brain->setEyeCommand(gColorParts->linevalue,
-                              gColorParts->linevalue_LUG,
-                              gMotorParts->xvalue,
-                              gMotorParts->yvalue,
-                              gMotorParts->odo,
-                              gMotorParts->velocity,
-                              gMotorParts->yawrate,
-                              gMotorParts->abs_angle,
-            gMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO),
-			      gMotorParts->robo_stop,
-			      gMotorParts->robo_forward,
-			      gMotorParts->robo_back,
-			      gMotorParts->robo_turn_left,
-			      gMotorParts->robo_turn_right,
-            gGyroParts->dansa,
-			      gColorParts->det_gray,
-            gSonarParts->sonarDistance
-			      );//指令値をあなごの脳みそに渡す
-
-    gAng_Brain->setRoboCommand(gAng_Robo->balance_mode);//指令値をあなごの脳みそに渡す
-
-    gAng_Brain->SetSysMode(static_cast<int>(mSys_Mode));
-    gAng_Brain->run();//あなご脳みそ計算スタート
-    gAng_Robo->setCommand(gAng_Brain->forward,
-                          gAng_Brain->yawratecmd,
-                          gAng_Brain->anglecommand,
-                          gMotorParts->yawrate,
-                          gAng_Brain->tail_mode_lflag);//指令値をあなご手足に渡す
-
-
-    if(IsStart == true){
-      gAng_Robo->run();
-    }
+    gController->ControllerOperation();
   }
   ext_tsk();
 }
@@ -335,7 +287,7 @@ void bt_task(intptr_t unused)
 void main_task(intptr_t unused) {
   sys_initialize();
   //calibrate color sensor and set threshold of anago eye
-  mSys_Mode = CALIB_COLOR_SENSOR;
+  gController->mSys_Mode = CALIB_COLOR_SENSOR;
   
   calibration calib(gColorParts, gTouchParts, gMotorParts);
   int error = calib.set_calibration();
@@ -346,7 +298,7 @@ void main_task(intptr_t unused) {
   gMotorParts->tail_reset();
   gMotorParts->tail_stand_up();
 
-  mSys_Mode = WAIT_FOR_START;
+  gController->mSys_Mode = WAIT_FOR_START;
 
   ev3_sta_cyc(EYE_CYC);
 //  ev3_sta_cyc(BRAIN_CYC);
@@ -371,7 +323,7 @@ void main_task(intptr_t unused) {
   }
   ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
   ev3_led_set_color(LED_OFF);
-  mSys_Mode=START;
+  gController->mSys_Mode=START;
 
   //Start Dash sequence from here to robo_task.  
   while(gMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) <= 100){
@@ -380,12 +332,11 @@ void main_task(intptr_t unused) {
     TAIL_ANGLE_STAND_UP++;
   }
   
-  IsStart = true;
 //  ev3_sta_cyc(ROBO_CYC);
   ter_tsk(BT_TASK);
   slp_tsk();  // バックボタンが押されるまで待つ
 
-  IsStart = false;
+  gController->mSys_Mode = STOP;
   ev3_stp_cyc(EYE_CYC);
 //  ev3_stp_cyc(BRAIN_CYC);
 //  ev3_stp_cyc(ROBO_CYC);

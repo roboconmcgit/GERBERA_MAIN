@@ -42,7 +42,7 @@ public:
                                         //ジャイロパーツをリセットする
     int32_t GetGyroPartsData();
                                         //ジャイロセンサの現在値を取得する
-    void  det_Dansa();
+    void  GyroPartsTask();
                                         
 };
 

@@ -1,5 +1,5 @@
 //Parameter of Robo
-int TAIL_ANGLE_STAND_UP = 95; /* 完全停止時の角度[度]     */
+int TAIL_ANGLE_STAND_UP = 98; /* 完全停止時の角度[度]     */
 int TAIL_ANGLE_RUN      =  3; /* バランス走行時の角度[度] */
 int TAIL_ANGLE_DANSA    = 85; /* 完全停止時の角度[度]     */
 int TAIL_ANGLE_LUG      = 75; /* 3点移動時の角度[度]      */
@@ -34,7 +34,7 @@ float RAD_450_DEG = 7.8540;
 
 
 //Parameter of Course
-float FINAL_STRAIGHT_LENGTH = 1950;
+float FINAL_STRAIGHT_LENGTH = 1900;
 float DEAD_ZONE_LENGTH      =  400;
 float FST_DANSA_POS         =  280;
 float SCD_DANSA_POS         =  290;
