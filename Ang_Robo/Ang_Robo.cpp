@@ -21,31 +21,20 @@ const int Ang_Robo::HIGH   = 70;    // 高速
 
 /**
  * コンストラクタ
- * @param gyroSensor ジャイロセンサ
+ * @param GyroParts ジャイロセンサ
  * @param leftWheel  左モータ
  * @param rightWheel 右モータ
  * @param balancer   バランサ
  */
-Ang_Robo::Ang_Robo(const ev3api::GyroSensor& gyroSensor,
-                                 ev3api::Motor& leftWheel,
-                                 ev3api::Motor& rightWheel,
-                                 ev3api::Motor& tail_motor,
-                                 Balancer* balancer)
-    : mGyroSensor(gyroSensor),
-      mLeftWheel(leftWheel),
-      mRightWheel(rightWheel),
-      mTail_Motor(tail_motor),
+Ang_Robo::Ang_Robo(GyroParts* gyro,
+                   MotorParts* motor,
+                   Balancer* balancer)
+    : mGyroParts(gyro),
+      mMotorParts(motor),
       mBalancer(balancer),
       mForward(LOW),
-      mTurn(LOW),
+      mTurn(LOW)
 
-      //17.07.28 k-ota add for tail_control
-     angle2_e(0),   /* angle2用変数型宣言 */
-     angle2_eo1(0), /* angle2用変数型宣言 */
-     angle2_eo2(0), /* angle2用変数型宣言 */
-     pwm_o(0),      /* angle2用変数型宣言 */
-     pwm2(0),
-     pwm(0)
  {
 }
 
@@ -53,11 +42,11 @@ Ang_Robo::Ang_Robo(const ev3api::GyroSensor& gyroSensor,
  * バランス走行する
  */
 void Ang_Robo::run() {
-    int16_t angle = mGyroSensor.getAnglerVelocity();  // ジャイロセンサ値
-    int rightWheelEnc = mRightWheel.getCount();       // 右モータ回転角度
-    int leftWheelEnc  = mLeftWheel.getCount();        // 左モータ回転角度
+    int16_t angle = mGyroParts->GetGyroPartsData();  // ジャイロセンサ値
+    int rightWheelEnc = mMotorParts->getMotorPartsPwm(MOTORPARTS_RIGHT_NO);       // 右モータ回転角度
+    int leftWheelEnc  = mMotorParts->getMotorPartsPwm(MOTORPARTS_LEFT_NO);        // 左モータ回転角度
 
-    tail_control(mAngleCommand);
+    mMotorParts->tail_control(mAngleCommand);
 
 	//アクティブヨーレート();
     mTurn = YawrateController(mYawrate, mYawratecmd);
@@ -76,37 +65,33 @@ void Ang_Robo::run() {
 
     /*	if(mTailModeFlag == false) //0816
 	{
-        mLeftWheel.setPWM(mBalancer->getPwmLeft());
-        mRightWheel.setPWM(mBalancer->getPwmRight());
+        mMotorParts->setPWM(mBalancer->getPwmLeft());
+        mMotorParts->setPWM(mBalancer->getPwmRight());
 	}
 	else
 	{
-		mLeftWheel.setPWM(mtail_mode_pwm_l);
-		mRightWheel.setPWM(mtail_mode_pwm_r);
+		mMotorParts->setPWM(mtail_mode_pwm_l);
+		mMotorParts->setPWM(mtail_mode_pwm_r);
 		}*/
 
     if(mTailModeFlag == true)
 	{
 	  TailMode(mForward, mYawratecmd);
-	  mLeftWheel.setPWM(mtail_mode_pwm_l);
-	  mRightWheel.setPWM(mtail_mode_pwm_r);
+	  mMotorParts->setMotorPartsLeftRight(mtail_mode_pwm_r,mtail_mode_pwm_l);
 	  balance_mode = false;
 	}
 	else
 	{
-	  mLeftWheel.setPWM(mBalancer->getPwmLeft());
-	  mRightWheel.setPWM(mBalancer->getPwmRight());
+      mMotorParts->setMotorPartsLeftRight(mBalancer->getPwmRight(),mBalancer->getPwmLeft());
 	  balance_mode = true;
 	}
 
 #ifdef DEBUG_LINETRACE
-    mLeftWheel.setPWM(mForward-mYawratecmd);
-    mRightWheel.setPWM(mForward+mYawratecmd);
+	mMotorParts->setMotorPartsLeftRight(mForward+mYawratecmd,mForward-mYawratecmd);
 #endif
 
 #ifdef DEBUG_STOP
-    mLeftWheel.setPWM(0);
-    mRightWheel.setPWM(0);
+	mMotorParts->setMotorPartsLeftRight(0,0);0
 #endif
 }
 
@@ -114,16 +99,13 @@ void Ang_Robo::run() {
  * バランス走行に必要なものをリセットする
  */
 void Ang_Robo::init() {
-    int offset = mGyroSensor.getAnglerVelocity();  // ジャイロセンサ値
+    int offset = mGyroParts->GetGyroPartsData();  // ジャイロセンサ値
     // モータエンコーダをリセットする
-    mLeftWheel.reset();
-    mRightWheel.reset();
+    mMotorParts->MotorPartsReset(MOTORPARTS_LEFT_BIT&MOTORPARTS_RIGHT_BIT);
 
     // 倒立振子制御初期化
     mBalancer->init(offset);
     balance_mode = true;
-
-    gTail_pwm->init_pid(0.1, 0.01, 0.01, dT_4ms);
 
     //    tail_reset();
     //    tail_upright();
@@ -146,84 +128,6 @@ void Ang_Robo::setCommand(int forward, float yawratecmd, signed int anglecommand
     mmYawratecmd = mAngleCommand;//目標Yawrate
     mmYawrate = mYawrate;
 }
-
-//2017.07.28 k-ota copy from 3-apex
-//*****************************************************************************
-// 関数名 : tail_control
-// 引数 : angle (モータ目標角度[度])
-// 返り値 : 無し
-// 概要 : 走行体完全停止用モータの角度制御
-//*****************************************************************************
-void Ang_Robo::tail_control(signed int angle)
-{
-
-  //  pwm = (float)(angle - mTail_Motor.getCount()*P_GAIN); /* 比例制御 */
-  pwm = gTail_pwm->calc_pid(angle, mTail_Motor.getCount());
-  pwm = pwm*0.1;
-  /* PWM出力飽和処理 */
-  if (pwm > PWM_ABS_MAX)
-    {
-      pwm = PWM_ABS_MAX;
-    }
-  else if (pwm < -PWM_ABS_MAX)
-    {
-      pwm = -PWM_ABS_MAX;
-    }
-
-  if (pwm == 0)
-    {
-      //17.07.28 kota modify//        ev3_motor_stop(tail_motor, true);
-      mTail_Motor.stop();
-    }
-  else
-    {
-      //17.07.28 kota modify//        ev3_motor_set_power(tail_motor, (signed char)pwm);
-      mTail_Motor.setPWM((signed int)pwm);
-    }
-  angle2_eo1 = 0.0;
-  angle2_eo2 = 0.0;
-  pwm_o = pwm; /* angle2用変数型初期化 */
-
-}
-
-//170816 ota add tail control
-
-void Ang_Robo::tail_reset(){
-  int32_t angle    = 0;
-  int32_t angle_1d = 0;
-
-  mTail_Motor.setPWM(-10);
-  angle = 0;
-  angle_1d = 1;
-
-  while(1){
-    if(angle == angle_1d){
-      mTail_Motor.stop();
-      mTail_Motor.reset();
-      break;
-    }
-    else{
-      angle_1d = angle;
-      tslp_tsk(1000);
-      angle = mTail_Motor.getCount();
-    }
-  }
-  mTail_Motor.stop();
-  mTail_Motor.reset();
-}
-
-void Ang_Robo::tail_stand_up(){
-    while(1){
-      if(mTail_Motor.getCount() == TAIL_ANGLE_STAND_UP){
-	mTail_Motor.stop();
-	break;
-      }
-      else{
-	mTail_Motor.setPWM(5);
-      }
-    }
-    mTail_Motor.stop();
-} //tail for gyro reset and color sensor calibration
 
 //2017/08/06多田さんヨーレートコントローラー
 float Ang_Robo::YawrateController(float yawrate, float yawrate_cmd)

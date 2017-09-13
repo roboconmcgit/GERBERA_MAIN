@@ -6,13 +6,23 @@ APPL_CXXOBJS += \
 	Ang_Robo.o \
 	BalancerCpp.o \
 	util.o \
-    ParamFileRead.o \
-    ang_eye.o \
-    ang_brain.o \
-    Brain_Calc_Library.o \
-    Strategy_Det.o \
-    calibration.o \
-    Command_Calc.o 
+        ParamFileRead.o \
+        ang_eye.o \
+        ang_brain.o \
+        Brain_Calc_Library.o \
+        Strategy_Det.o \
+        calibration.o \
+        Command_Calc.o \
+	ColorParts.o \
+	MotorParts.o \
+	GyroParts.o \
+	SonarParts.o \
+	TouchParts.o \
+	Cruise.o \
+	Controller.o \
+#	lcdDraw.o \
+#	logging.o \
+#	ClockTimer.o \
 
 SRCLANG := c++
 
@@ -23,7 +33,17 @@ include $(EV3RT_SDK_LIB_DIR)/libcpp-ev3/Makefile
 
 endif
 
-APPL_DIR += $(mkfile_path)app $(mkfile_path)Utility $(mkfile_path)Ang_Eye $(mkfile_path)Ang_Brain $(mkfile_path)Ang_Robo
+APPL_DIR += \
+        $(mkfile_path)app \
+        $(mkfile_path)Utility \
+        $(mkfile_path)Ang_Eye \
+        $(mkfile_path)Ang_Brain \
+        $(mkfile_path)Ang_Robo \
+        $(mkfile_path)calibration \
+        $(mkfile_path)controller \
+        $(mkfile_path)controller/cruise \
+        $(mkfile_path)controller/difficult \
+        $(mkfile_path)parts \
 
 INCLUDES += \
         -I$(mkfile_path)app \
@@ -31,5 +51,10 @@ INCLUDES += \
         -I$(mkfile_path)Ang_Eye \
         -I$(mkfile_path)Ang_Brain \
         -I$(mkfile_path)Ang_Robo \
+        -I$(mkfile_path)calibration \
+        -I$(mkfile_path)controller \
+        -I$(mkfile_path)controller/cruise \
+        -I$(mkfile_path)controller/difficult \
+        -I$(mkfile_path)parts \
 
 # COPTS += -fno-use-cxa-atexit

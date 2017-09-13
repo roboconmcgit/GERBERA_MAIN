@@ -7,16 +7,20 @@
 
 #include "util.h"
 #include "parameter.h"
-#include "GyroSensor.h"
+
+#include "GyroParts.h"
 #include "Motor.h"
+
+#include "MotorParts.h"
+#include "GyroParts.h"
+
 #include "BalancerCpp.h"
 #include <deque>
+#include "MotorParts.h"
 
 using namespace std;
 
 //17.07.28 k-ota copy from 3-apex
-//#define P_GAIN             0.65F /* 完全停止用モータ制御比例係数 */
-#define P_GAIN             1 /* 完全停止用モータ制御比例係数 */
 #define PWM_ABS_MAX          60 /* 完全停止用モータ制御PWM絶対最大値 */
 
 class Ang_Robo {
@@ -25,11 +29,9 @@ public:
     static const int NORMAL;
     static const int HIGH;
 
-    Ang_Robo(const ev3api::GyroSensor& gyroSensor,
-                    ev3api::Motor& leftWheel,
-                    ev3api::Motor& rightWheel,
-                    ev3api::Motor& tail_motor,
-                    Balancer* balancer);
+    Ang_Robo(GyroParts* gyro,
+             MotorParts* motor,
+             Balancer* balancer);
 
     void init();
     void run();
@@ -37,11 +39,6 @@ public:
     void setCommand(int forward, float yawratecmd, signed int anglecommand, float yawrate, bool tail_mode_lflag);//0816
 
 
-    void tail_control(signed int angle); //2017.07.28 kota copy from 3-apex
-   //170816 ota add tail control
-    void tail_reset();
-    void tail_stand_up(); //tail for gyro reset and color sensor calibration
-    
     void exportRobo(char *csv_header);
     void saveData(int idata_num);
     
@@ -52,12 +49,9 @@ public:
     float mmYawrate;
 
 private:
-    const ev3api::GyroSensor& mGyroSensor;
-    ev3api::Motor& mLeftWheel;
-    ev3api::Motor& mRightWheel;
-    ev3api::Motor& mTail_Motor;
+    GyroParts* mGyroParts;
+    MotorParts* mMotorParts;
     Balancer* mBalancer;
-    PID *gTail_pwm = new PID();
 
     int   mForward;
     float mTurn;
@@ -68,12 +62,6 @@ private:
    
     signed int mAngleCommand;
     //17.07.28 kota copy from 3-apex
-    float angle2_e;   /* angle2用変数型宣言 */
-    float angle2_eo1; /* angle2用変数型宣言 */
-    float angle2_eo2; /* angle2用変数型宣言 */
-    float pwm_o;      /* angle2用変数型宣言 */
-    float pwm2;
-    float pwm;
 
     float YawrateController(float yawrate, float yawrate_cmd);
 	float yaw_ctl_dt = 0.004;

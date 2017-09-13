@@ -12,6 +12,22 @@ extern "C" {
 }
 #endif
 */
+#define COLORPARTS_CH         (PORT_3)
+#define GYRO_CH               (PORT_4)
+#define LEFT_MOTOR_CH         (PORT_C)
+#define RIGHT_MOTOR_CH        (PORT_B)
+#define TAIL_MOTOR_CH         (PORT_A)
+#define SONARPARTS_CH         (PORT_2)
+#define TOUCHPARTS_CH         (PORT_1)
+
+#define LIGHT_WHITE          40  /* 白色の光センサ値 */
+#define LIGHT_BLACK           0  /* 黒色の光センサ値 */
+//#define TAIL_ANGLE_STAND_UP  80  /* 完全停止時の角度[度] */
+#define TAIL_ANGLE_DRIVE      3  /* バランス走行時の角度[度] */
+//#define P_GAIN             0.65F /* 完全停止用モータ制御比例係数 */
+#define P_GAIN             1 /* 完全停止用モータ制御比例係数 */
+#define PWM_ABS_MAX          60  /* 完全停止用モータ制御PWM絶対最大値 */
+#define SONAR_ALERT_DISTANCE 30  /* 超音波センサによる障害物検知距離[cm] */
 
 //Parameter of Robo
 extern int TAIL_ANGLE_STAND_UP;  /* 完全停止時の角度[度] */
