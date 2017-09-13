@@ -1,0 +1,100 @@
+#ifndef PRAMETER_H_
+#define PRAMETER_H_
+
+/*
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define dT_100ms             0.1 //タスク周期[s]
+
+#ifdef __cplusplus
+}
+#endif
+*/
+
+//Parameter of Robo
+extern int TAIL_ANGLE_STAND_UP;  /* 完全停止時の角度[度] */
+extern int TAIL_ANGLE_RUN;     /* バランス走行時の角度[度] */
+extern int TAIL_ANGLE_DANSA; /* 完全停止時の角度[度] */
+extern int TAIL_ANGLE_LUG; /* 3点移動時の角度[度] */
+extern int TAIL_ANGLE_GARAGE; /* 完全停止時の角度[度] */
+
+extern float WheelDiameter; //背面から見てタイヤの直径[mm]
+extern float WHEEL_R;       //radius of wheel[mm]
+extern int   RoboTread;      //トレッド長さ[mm]
+
+//Parameter of time length unit
+extern float dT_100ms;
+extern float dT_4ms;
+
+extern float PAI;
+extern float FIVE_PAI;
+
+extern float RAD_315_DEG;
+extern float RAD_1_DEG; //deg@1rad 
+extern float RAD_5_DEG; //
+extern float RAD_15_DEG; //deg@1rad 
+extern float RAD_30_DEG; //
+
+extern float MINUS_RAD_5_DEG; //
+extern float MINUS_RAD_15_DEG; //
+extern float MINUS_RAD_30_DEG; //
+
+extern float RAD_90_DEG;
+extern float RAD_120_DEG;
+extern float RAD_315_DEG;
+extern float RAD_345_DEG;
+extern float RAD_360_DEG;
+extern float RAD_450_DEG;
+
+//Parameter of Course
+extern float FINAL_STRAIGHT_LENGTH;
+extern float DEAD_ZONE_LENGTH;
+extern float FST_DANSA_POS;
+extern float SCD_DANSA_POS;
+
+extern float STEP_TO_GARAGE_LENGTH;
+extern float GRAY_TO_GARAGE_LENGTH;
+
+extern int   SONAR_DIST;
+extern int   GARAGE_LIT_DIST;
+
+//Parameter of Area
+extern float LineTrace1Area[4];
+extern float MapTraceArea[4];
+
+extern float StartArea[4];
+extern float First_Straight[4];
+extern float First_Corner[4];
+extern float Second_Straight[4];
+extern float Second_Corner[4];
+
+extern float GoalArea[4];
+extern float Goal_to_Step[4];
+extern float StepArea[4];
+extern float LookUpGateArea[4];
+extern float GarageArea[4];
+extern float StopArea[4];
+
+extern float Gate12Area[4];
+extern float Gate23Area[4];
+extern float Gate34Area[4];
+extern float Gate45Area[4];
+extern float Gate56Area[4];
+extern float Gate67Area[4];
+extern float Gate78Area[4];
+extern float Gate89Area[4];
+
+
+extern int Approach_to_LUG_time;
+extern int LUG_Tail_On_time;
+extern int LUG_Tail_On_fowrd;
+extern int LUG_Tailangle_fowrd;
+extern float LineTracer_KP;
+extern float LineTracer_KI;
+extern float LineTracer_KD;
+
+extern float TURN_PAI;
+
+#endif // !PRAMETER_H_
