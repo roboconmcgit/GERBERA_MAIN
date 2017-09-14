@@ -8,7 +8,7 @@ extern "C" {
 #define ROBO_PRIORITY    TMIN_APP_TPRI + 3
 #define MAIN_PRIORITY    TMIN_APP_TPRI + 4
 #define EYE_PRIORITY     TMIN_APP_TPRI + 1
-#define BRAIN_PRIORITY   TMIN_APP_TPRI + 2
+//#define BRAIN_PRIORITY   TMIN_APP_TPRI + 2
 #define BT_PRIORITY      TMIN_APP_TPRI + 5
 
 #ifndef STACK_SIZE
@@ -37,8 +37,8 @@ extern void eye_cyc(intptr_t exinf);
 extern void robo_task(intptr_t exinf);
 extern void robo_cyc(intptr_t exinf);
 	
-extern void brain_task(intptr_t exinf);
-extern void brain_cyc(intptr_t exinf);
+//extern void brain_task(intptr_t exinf);
+//extern void brain_cyc(intptr_t exinf);
 
 #endif /* TOPPERS_MACRO_ONLY */
 

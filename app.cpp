@@ -172,7 +172,7 @@ static void log_dat( ){
   log_dat_00[log_cnt]  = gColorParts->linevalue;
   log_dat_01[log_cnt]  = gGyroParts->GetGyroPartsData();
   log_dat_02[log_cnt]  = gGyroParts->gyro_250d[0];
-  log_dat_03[log_cnt]  = gController->gAng_Brain->forward;
+  log_dat_03[log_cnt]  = gController->forward;
   log_fdat_00[log_cnt] = gMotorParts->velocity;
   log_fdat_01[log_cnt] = gMotorParts->yawrate;
   log_fdat_02[log_cnt] = gMotorParts->abs_angle;
@@ -230,7 +230,7 @@ void eye_task(intptr_t exinf) {
   }
 #endif
   if (emergencyStop(gMotorParts->velocity)) {
-  //  wup_tsk(MAIN_TASK);
+    //wup_tsk(MAIN_TASK);
   }
 
   if (ev3_button_is_pressed(BACK_BUTTON)) {
@@ -241,34 +241,6 @@ void eye_task(intptr_t exinf) {
     gGyroParts->GyroPartsTask();
     gSonarParts->SonarPartsTask();
     gTouchParts->TouchPartsTask();
-
-  }
-  ext_tsk();
-}
-
-//*****************************************************************************
-// 関数名 : 
-// 引数 : 
-// 返り値 : 
-// 概要 : 
-//*****************************************************************************
-//Anago Brain Task
-void brain_cyc(intptr_t exinf) {
-  act_tsk(BRAIN_TASK); //0817 tada
-}
-
-//*****************************************************************************
-// 関数名 : 
-// 引数 : 
-// 返り値 : 
-// 概要 : 
-//*****************************************************************************
-void brain_task(intptr_t exinf) {
-
-  if (ev3_button_is_pressed(BACK_BUTTON)) {
-      wup_tsk(MAIN_TASK);  // バックボタン押下
-
-  } else {
 
     gController->ControllerOperation();
   }
@@ -284,7 +256,6 @@ void brain_task(intptr_t exinf) {
 //Anago Robo(Teashi) Task
 void robo_cyc(intptr_t exinf) {
   act_tsk(ROBO_TASK);
-
 }
 
 //*****************************************************************************
@@ -363,7 +334,7 @@ void main_task(intptr_t unused) {
   gController->mSys_Mode = WAIT_FOR_START;
 
   ev3_sta_cyc(EYE_CYC);
-  ev3_sta_cyc(BRAIN_CYC);
+  //ev3_sta_cyc(BRAIN_CYC);
   
   ev3_lcd_draw_string("Set GERBERA on Start Line",0, 40);
   ev3_lcd_draw_string("PRESS TS or 1",0, 80);
@@ -400,7 +371,7 @@ void main_task(intptr_t unused) {
 
   gController->mSys_Mode = STOP;
   ev3_stp_cyc(EYE_CYC);
-  ev3_stp_cyc(BRAIN_CYC);
+  //ev3_stp_cyc(BRAIN_CYC);
   ev3_stp_cyc(ROBO_CYC);
 
   gMotorParts->stopMotorPartsLeftRight();

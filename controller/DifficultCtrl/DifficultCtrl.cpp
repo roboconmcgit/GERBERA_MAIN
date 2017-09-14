@@ -19,7 +19,6 @@
 #define _debug(x)
 #endif
 
-#if 0
 //*****************************************************************************
 // 関数名 : コンストラクタ
 // 引数 : unused
@@ -48,7 +47,6 @@ DifficultCtrl::~DifficultCtrl(){
 //*****************************************************************************
 void DifficultCtrl::init(){
     gClock       = new Clock();
-    Track_Mode = Start_to_1st_Corner;
     Step_Mode  = Step_Start;
     LUG_Mode = LUG_Start;
   }
@@ -59,8 +57,8 @@ void DifficultCtrl::init(){
 // 返り値 : なし
 // 概要 : 
 //*****************************************************************************
-int CommandCalc::StartDashRunner(){
-
+int DifficultCtrl::StartDashRunner(){
+    return 0;
 }
 
 //*****************************************************************************
@@ -69,7 +67,17 @@ int CommandCalc::StartDashRunner(){
 // 返り値 : なし
 // 概要 : 
 //*****************************************************************************
-int CommandCalc::StepRunner(int line_value, float odo, float angle, bool dansa, bool Robo_balance_mode){
+int DifficultCtrl::StepRunner(
+    int line_value, 
+    float odo, 
+    float angle, 
+    bool dansa, 
+    bool Robo_balance_mode,
+    int &forward,
+    float &anglecommand,
+    float &Yawratecmd,
+    bool &tail_mode_lflag
+){
 /*前提条件：ロボットがライン上にあること*/
     int ret = 0;
     float y_t;
@@ -200,7 +208,7 @@ int CommandCalc::StepRunner(int line_value, float odo, float angle, bool dansa, 
 
                 anglecommand = TAIL_ANGLE_RUN;
                 tail_mode_lflag = false;
-                if(mRobo_balance_mode == true){
+                if(Robo_balance_mode == true){
                     forward    = 0;
                     Yawratecmd = 0;
                     anglecommand = TAIL_ANGLE_RUN;
@@ -276,7 +284,7 @@ int CommandCalc::StepRunner(int line_value, float odo, float angle, bool dansa, 
             forward    = 0;
             Yawratecmd = 0;
             tail_mode_lflag = true;
-            if(mRobo_balance_mode == false){
+            if(Robo_balance_mode == false){
                 forward    = 0;
                 Yawratecmd = 0;
                 tail_mode_lflag = true;
@@ -343,7 +351,7 @@ int CommandCalc::StepRunner(int line_value, float odo, float angle, bool dansa, 
                 anglecommand = TAIL_ANGLE_RUN;
                 tail_mode_lflag = false;
 
-                if(mRobo_balance_mode == true){
+                if(Robo_balance_mode == true){
                     forward    = 0;
                     Yawratecmd = 0;
                     anglecommand = TAIL_ANGLE_RUN;
@@ -415,7 +423,17 @@ int CommandCalc::StepRunner(int line_value, float odo, float angle, bool dansa, 
 // 返り値 : なし
 // 概要 : 
 //*****************************************************************************
-int CommandCalc::LookUpGateRunner(int line_value_lug, float odo, float angle,int line_value){
+int DifficultCtrl::LookUpGateRunner(
+    int line_value_lug, 
+    float odo, 
+    float angle,
+    int line_value, 
+    bool Robo_balance_mode,
+    int &forward,
+    float &anglecommand,
+    float &Yawratecmd,
+    bool &tail_mode_lflag
+){
     int ret = 0;
     float y_t;
     static float odo_starting_point;
@@ -441,14 +459,13 @@ int CommandCalc::LookUpGateRunner(int line_value_lug, float odo, float angle,int
             anglecommand = TAIL_ANGLE_RUN+80;
             clock_start = gClock->now();
         }
-        //Step_Mode = First_Dansa;
         break;
 
     case LUG_Tail_On:
         tail_mode_lflag = true;
         forward    = 0;
         Yawratecmd = 0;
-        if(mRobo_balance_mode == false){
+        if(Robo_balance_mode == false){
             forward    = 0;
             Yawratecmd = 0;
             LUG_Mode = LUG_Tailangle;
@@ -466,7 +483,6 @@ int CommandCalc::LookUpGateRunner(int line_value_lug, float odo, float angle,int
             clock_start = gClock->now();
         }
         break;
-
 
     case LUG_Stop0:
         forward = 0;
@@ -690,8 +706,8 @@ int CommandCalc::LookUpGateRunner(int line_value_lug, float odo, float angle,int
 // 返り値 : なし
 // 概要 : 
 //*****************************************************************************
-int CommandCalc::GarageRunner(int line_value_lug, float odo, float angle,int line_value){
-
+int DifficultCtrl::GarageRunner(int line_value_lug, float odo, float angle,int line_value){
+    return 0;
 }
 
 //*****************************************************************************
@@ -700,10 +716,13 @@ int CommandCalc::GarageRunner(int line_value_lug, float odo, float angle,int lin
 // 返り値 : なし
 // 概要 : 
 //*****************************************************************************
-int CommandCalc::StopRobo(){
-
+int DifficultCtrl::StopRobo(
+    int &forward,
+    float &anglecommand,
+    float &Yawratecmd,
+    bool &tail_mode_lflag
+){
     forward =  0;
     Yawratecmd = 0.0;
-
+    return 1;
 }
-#endif

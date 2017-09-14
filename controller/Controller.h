@@ -17,9 +17,6 @@
 #include "SonarParts.h"
 #include "TouchParts.h"
 
-// デバッグ
-#include "ang_brain.h"
-
 #include <deque>
 
 using namespace std;
@@ -79,13 +76,9 @@ private:
 //protected:
 public:
     CruiseCtrl  *gCruiseCtrl;
-#if 0
     DifficultCtrl *gDifficultCtrl;
-#endif
-    Balancer    *gBalancer;
 
-    //デバッグ
-    Ang_Brain *gAng_Brain;
+    Balancer    *gBalancer;
 
     Sys_Mode mSys_Mode;
 

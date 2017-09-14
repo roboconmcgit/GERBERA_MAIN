@@ -12,6 +12,11 @@ extern "C" {
 }
 #endif
 */
+
+#define RIGHT_MODE
+
+//#define LEFT_MODE
+
 #define COLORPARTS_CH         (PORT_3)
 #define GYRO_CH               (PORT_4)
 #define LEFT_MOTOR_CH         (PORT_C)

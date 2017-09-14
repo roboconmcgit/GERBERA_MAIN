@@ -5,12 +5,13 @@
 #ifndef DIFFICULT_CTRL_H_
 #define DIFFICULT_CTRL_H_
 
-#if 0
 #include "ev3api.h"
 #include "Clock.h"
 #include "parameter.h"
 #include "util.h"
 #include "Brain_Calc_Library.h"
+
+#include "CruiseCtrl.h"
 
 using ev3api::Clock;
 /*
@@ -24,13 +25,7 @@ private:
     CruiseCtrl  *gCruiseCtrl;
 
     BrainCalcLibrary *gStep = new BrainCalcLibrary();       //段差走行オブジェクト（計算ライブラリ）
-
-    int   Forward;
-    float Yawratecmd;//目標Yawrate
-    float anglecommand;
-    float target_tail_angle
-	bool  tail_mode_lflag; //倒立走行フラグ
-    
+  
     enum enumStep_Mode{
       Step_Start,
       Approach_to_Step,
@@ -56,6 +51,8 @@ private:
       End_of_Step
     };
 
+    enumStep_Mode   Step_Mode;
+
     enum enumLUG_Mode{
 	  LUG_Start,
 	  Approach_to_LUG,
@@ -79,28 +76,44 @@ private:
 	  END,
     };
 
-    enumStep_Mode   Step_Mode;
     enumLUG_Mode LUG_Mode;
 
-public:
-
-
-	int   forward;         //前進目標値
-	float anglecommand;    //尻尾角度
-	int   log_dat_00;
-    DifficultCtrl();                       //コンストラクタ
+public:    
+    DifficultCtrl(CruiseCtrl* Cruise);     //コンストラクタ
     ~DifficultCtrl();                      //デストラクタ
-    void DifficultCtrl::init();
 
 	void init ();
     int StartDashRunner();                              //スタートダッシュ
-    int StepRunner(int line_value, float odo, float angle, bool dansa, bool Robo_balance_mode);//段差走行
-    //    void LookUpGateRunner();                             //ルックアップゲート走行
-    int LookUpGateRunner(int line_value_lug, float odo, float angle,int line_value);
+    int StepRunner(
+        int line_value, 
+        float odo, 
+        float angle, 
+        bool dansa, 
+        bool Robo_balance_mode,
+        int &forward,
+        float &anglecommand,
+        float &Yawratecmd,
+        bool &tail_mode_lflag
+    );//段差走行
+    int LookUpGateRunner(
+        int line_value_lug, 
+        float odo, 
+        float angle,
+        int line_value, 
+        bool Robo_balance_mode,
+        int &forward,
+        float &anglecommand,
+        float &Yawratecmd,
+        bool &tail_mode_lflag
+    );
     int GarageRunner(int line_value_lug, float odo, float angle,int line_value);                                 //ガレージ走行
-    int StopRobo();                                     //ロボット停止
+    int StopRobo(
+        int &forward,
+        float &anglecommand,
+        float &Yawratecmd,
+        bool &tail_mode_lflag
+    );                                     //ロボット停止
     
 };
-#endif
 
 #endif // !DIFFICULT_CTRL_H_

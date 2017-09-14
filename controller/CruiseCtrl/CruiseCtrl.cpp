@@ -73,7 +73,6 @@ void CruiseCtrl::CruiseCtrlOperation() {
 			Stand_Mode = Stand_Vert;
 		}
 		tail_stand_from_balance();
-
 	}else{
 		mMotorParts->tail_control(mAngleCommand);
 		balance_off_en = false;
