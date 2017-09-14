@@ -6,8 +6,8 @@
 #define DIFFICULT_CTRL_H_
 
 #include "ev3api.h"
-#include "Clock.h"
 #include "parameter.h"
+#include "Clock.h"
 #include "util.h"
 #include "Brain_Calc_Library.h"
 
@@ -27,28 +27,30 @@ private:
     BrainCalcLibrary *gStep = new BrainCalcLibrary();       //段差走行オブジェクト（計算ライブラリ）
   
     enum enumStep_Mode{
-      Step_Start,
-      Approach_to_Step,
-      Change_Right_Edge_Trace,
-      Right_Edge_On,
-      First_Dansa,
-      First_Dansa_On,
-      First_Dansa_Tail_On,
-      First_Turn,
-      First_Pre_Stand_Up,
-      First_Dansa_Stand_Up,
-      Approach_to_2nd_Step,
-      Second_Dansa,
-      Second_Dansa_On,
-      Second_Dansa_Tail_On,
-      Second_Turn,
-      Second_Pre_Stand_Up,
-      Second_Dansa_Stand_Up,
-      Approach_to_Exit,
+        Step_Start,
+        Approach_to_Step,
+        Change_Right_Edge_Trace,
+        Right_Edge_On,
+        First_Dansa,
+        First_Dansa_On,
+        First_Dansa_Tail_On,
+        Fst_Turn_Pos_Adj,
+        First_Turn,
+        First_Pre_Stand_Up,
+        First_Dansa_Stand_Up,
+        Approach_to_2nd_Step,
+        Pre_Second_Dansa,
+        Second_Dansa,
+        Second_Dansa_On,
+        Second_Dansa_Tail_On,
+        Second_Turn,
+        Second_Pre_Stand_Up,
+        Second_Dansa_Stand_Up,
+        Approach_to_Exit,
 
-      Change_Left_Edge_Trace,
-      Left_edge_On,
-      End_of_Step
+        Change_Left_Edge_Trace,
+        Left_edge_On,
+        End_of_Step
     };
 
     enumStep_Mode   Step_Mode;
@@ -93,7 +95,9 @@ public:
         int &forward,
         float &anglecommand,
         float &Yawratecmd,
-        bool &tail_mode_lflag
+        bool &tail_mode_lflag,
+        float &ref_x,
+        float mXvalue
     );//段差走行
     int LookUpGateRunner(
         int line_value_lug, 

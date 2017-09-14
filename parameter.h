@@ -45,6 +45,8 @@ extern float WheelDiameter; //背面から見てタイヤの直径[mm]
 extern float WHEEL_R;       //radius of wheel[mm]
 extern int   RoboTread;      //トレッド長さ[mm]
 
+extern int   CL_SNSR_GAIN_GRAY;
+
 //Parameter of time length unit
 extern float dT_100ms;
 extern float dT_4ms;
@@ -72,11 +74,15 @@ extern float RAD_450_DEG;
 //Parameter of Course
 extern float FINAL_STRAIGHT_LENGTH;
 extern float DEAD_ZONE_LENGTH;
+extern float STEP_START_LENGTH;
 extern float FST_DANSA_POS;
 extern float SCD_DANSA_POS;
+extern int   STEP_CLIMB_SPPED;
 
 extern float STEP_TO_GARAGE_LENGTH;
 extern float GRAY_TO_GARAGE_LENGTH;
+extern float GARAGE_X_POS;
+extern float GARAGE_LENGTH;
 
 extern int   SONAR_DIST;
 extern int   GARAGE_LIT_DIST;
@@ -84,6 +90,14 @@ extern int   GARAGE_LIT_DIST;
 //Parameter of Area
 extern float LineTrace1Area[4];
 extern float MapTraceArea[4];
+extern float MapTraceArea1[4];
+extern float MapTraceArea2[4];
+extern float MapTraceArea3[4];
+extern float MapTraceArea4[4];
+extern float MapTraceArea5[4];
+extern float MapTraceArea6[4];
+extern float MapTraceArea7[4];
+extern float MapTraceArea8[4];
 
 extern float StartArea[4];
 extern float First_Straight[4];

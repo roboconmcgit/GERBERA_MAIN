@@ -73,7 +73,9 @@ static void sys_initialize() {
   gColorParts = new ColorParts();
   gMotorParts = new MotorParts();
   gGyroParts  = new GyroParts();
+#ifdef RIGHT_MODE
   gSonarParts = new SonarParts();
+#endif
   gTouchParts = new TouchParts();
 
   gController = new Controller(gColorParts,gMotorParts,gGyroParts,gSonarParts,gTouchParts);
@@ -91,7 +93,11 @@ static void sys_initialize() {
 
   ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
   ev3_lcd_set_font(EV3_FONT_MEDIUM);
+#ifdef RIGHT_MODE
   ev3_lcd_draw_string("Right Line Trace",0, 20);
+#else
+  ev3_lcd_draw_string("Left Line Trace",0, 20);
+#endif
 
   ev3_lcd_draw_string(battery_str,0, 40);
   ev3_lcd_draw_string("Set ANG on GND",0, 60);
@@ -155,7 +161,9 @@ static void sys_destroy(){
   delete gColorParts;
   delete gMotorParts;
   delete gGyroParts;
+#ifdef RIGHT_MODE
   delete gSonarParts;
+#endif
   delete gTouchParts;
   delete gController;
 }
@@ -239,7 +247,9 @@ void eye_task(intptr_t exinf) {
     gColorParts->ColorPartsTask();
     gMotorParts->WheelOdometry(dT_4ms);
     gGyroParts->GyroPartsTask();
+#ifdef RIGHT_MODE
     gSonarParts->SonarPartsTask();
+#endif
     gTouchParts->TouchPartsTask();
 
     gController->ControllerOperation();

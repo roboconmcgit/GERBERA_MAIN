@@ -11,8 +11,6 @@
 // using宣言
 //using namespace ev3api;
 
-#define RIGHT_COURCE_MODE
-
 class calibration{
 private:
     ColorParts  *gColorParts;

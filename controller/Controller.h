@@ -6,10 +6,12 @@
 #define CONTROLLER_H_
 
 #include "ev3api.h"
+#include "parameter.h"
 #include "app.h"
 #include "CruiseCtrl.h"
 #include "DifficultCtrl.h"
 #include "Brain_Calc_Library.h"
+#include "Clock.h"
 
 #include "ColorParts.h"
 #include "MotorParts.h"
@@ -20,6 +22,7 @@
 #include <deque>
 
 using namespace std;
+using ev3api::Clock;
 
 enum Sys_Mode{
     SYS_INIT            = 110,
@@ -49,10 +52,14 @@ private:
     GyroParts   *gGyroParts;
     SonarParts  *gSonarParts;
     TouchParts  *gTouchParts;
+    
+    Clock*       gClock;
 
     BrainCalcLibrary *gStep = new BrainCalcLibrary();       //段差走行オブジェクト（脳みそ計算ライブラリ）
     
+    float mYaw_angle_offset;
 
+    float ref_x;
     int   mLinevalue; //ライン検出値
     int   mLinevalue_LUG;
     float mXvalue;    //x座標
@@ -98,12 +105,16 @@ public:
         Snd_Corner,
         Final_Corner,
         Final_Straight,
+        Get_Ref_Odo,
         Dead_Zone,
         Return_to_Line,
         Go_Step,
         Approach_to_Garage,
+        Go_to_Garage,
+        Garage_Tail_On,
         Return_to_Line_Garage,
         Garage_In,
+        Garage_Stop,
         Stop_Robo,
         Go_LUG,
         Track_Debug_00,

@@ -22,7 +22,7 @@ int calibration::set_calibration(){
 
   unsigned char calib_flag1=0;
   unsigned char calib_flag2=0;
-#ifdef RIGHT_COURCE_MODE
+#ifdef RIGHT_MODE
   unsigned char calib_flag3=0;
   unsigned char calib_flag4=0;
 #endif
@@ -95,7 +95,7 @@ int calibration::set_calibration(){
     }
     tslp_tsk(50);
   }
-#ifdef  RIGHT_COURCE_MODE
+#ifdef RIGHT_MODE
   gMotorParts->tail_reset();
   ev3_speaker_play_tone(NOTE_G5,200);
   tslp_tsk(100);
@@ -175,7 +175,7 @@ int calibration::set_calibration(){
   ev3_lcd_draw_string(s, 0, CALIB_FONT_HEIGHT*1);
   sprintf(s,"WHITE : %2d",color_calib.white);
   ev3_lcd_draw_string(s, 0, CALIB_FONT_HEIGHT*2);
-#ifdef  RIGHT_COURCE_MODE
+#ifdef RIGHT_MODE
   sprintf(s,"BLACK_SLANT : %2d",color_calib.black_slant);
   ev3_lcd_draw_string(s, 0, CALIB_FONT_HEIGHT*3);
   sprintf(s,"WHITE_SLANT : %2d",color_calib.white_slant);

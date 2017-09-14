@@ -76,7 +76,9 @@ int DifficultCtrl::StepRunner(
     int &forward,
     float &anglecommand,
     float &Yawratecmd,
-    bool &tail_mode_lflag
+    bool &tail_mode_lflag,
+    float &ref_x,
+    float mXvalue
 ){
 /*前提条件：ロボットがライン上にあること*/
     int ret = 0;
@@ -85,13 +87,15 @@ int DifficultCtrl::StepRunner(
     static float target_angle;
     static float target_tail_angle;
     static int32_t clock_start;
+    static int   dansa_cnt;
 
     switch(Step_Mode){
 
         case Step_Start:
+            dansa_cnt = 0;
             forward =  50;
-            gCruiseCtrl->LineTracerYawrate((2*line_value),-1.0,-1.0);
-            target_odo = odo + 500;
+            gCruiseCtrl->LineTracerYawrate((CL_SNSR_GAIN_GRAY*line_value),-1.0,-1.0);
+            target_odo = odo + STEP_START_LENGTH;
             clock_start = gClock->now();
             anglecommand = TAIL_ANGLE_RUN; //0817 tada
 
@@ -113,27 +117,44 @@ int DifficultCtrl::StepRunner(
                 forward =  50;
             }
 
-            gCruiseCtrl->LineTracerYawrate((2*line_value),-1.0,-1.0);
+            gCruiseCtrl->LineTracerYawrate((CL_SNSR_GAIN_GRAY*line_value),-1.0,-1.0);
             if((angle >  RAD_90_DEG)&&(Yawratecmd < 0) ){
                 Yawratecmd = 0.0;
             }
             if(dansa){
                 Step_Mode = First_Dansa;
                 target_odo = odo + FST_DANSA_POS;
+                clock_start = gClock->now();
+                dansa_cnt   = 0;
+                ref_x       = mXvalue; //reference x pos for Garage
             }
             break;
 
         case First_Dansa:
-            if(odo > target_odo){
-                forward = 0;
-                Yawratecmd = 0;
-                target_tail_angle =  TAIL_ANGLE_RUN;
-                clock_start = gClock->now();
-                Step_Mode = First_Dansa_On;
-                gStep->SetInitPIDGain(0.1,0.005,0.05,dT_4ms);
+            if(dansa){
+                dansa_cnt++;
+            }
+        
+            if(dansa_cnt < 50){
+                if(odo > target_odo){
+                    forward = 0;
+                    Yawratecmd = 0;
+                    target_tail_angle =  TAIL_ANGLE_RUN;
+                    clock_start = gClock->now();
+                    Step_Mode = First_Dansa_On;
+                    gStep->SetInitPIDGain(0.1,0.005,0.05,dT_4ms);
+                    dansa = 0;
+                }else{
+                    forward    =  STEP_CLIMB_SPPED;
+                    Yawratecmd = 0;
+                    clock_start = gClock->now();
+                }
             }else{
-                forward    = 20;
+                forward = -10;
                 Yawratecmd = 0;
+                if((gClock->now() - clock_start) > 3000){
+                    dansa_cnt = 0;
+                }
             }
             break;
 
@@ -158,7 +179,7 @@ int DifficultCtrl::StepRunner(
             if(Robo_balance_mode == false){
                 forward    = 0;
                 Yawratecmd = 0;
-                Step_Mode = First_Turn;
+                Step_Mode = Fst_Turn_Pos_Adj;
                 clock_start = gClock->now();
                 target_angle = angle + RAD_360_DEG + RAD_15_DEG;
             }
@@ -169,6 +190,20 @@ int DifficultCtrl::StepRunner(
 
             break;
 
+        case Fst_Turn_Pos_Adj:
+            forward = gStep->CalcPIDContrInput(target_odo, odo);
+            forward = forward * 0.1;
+            Yawratecmd = 0;
+            anglecommand = target_tail_angle;
+            
+            if((gClock->now() - clock_start) > 3000){
+              Step_Mode = First_Turn;
+              forward = 0;
+              Yawratecmd = 0;
+              clock_start = gClock->now();
+            }
+            break;
+        
         case First_Turn:
             tail_mode_lflag = true;
             if(angle >= target_angle){
@@ -191,7 +226,7 @@ int DifficultCtrl::StepRunner(
             Yawratecmd = y_t;
             tail_mode_lflag = true;
 
-            if((gClock->now() - clock_start) > 1500){
+            if((gClock->now() - clock_start) > 2000){
                 forward    = 0;
                 Yawratecmd = 0;
                 tail_mode_lflag = true;
@@ -241,25 +276,53 @@ int DifficultCtrl::StepRunner(
 
 
                 if(dansa){
-                    forward    = 10;
+                    forward    = 0;
                     Yawratecmd = 0;
-                    Step_Mode = Second_Dansa;
+                    Step_Mode = Pre_Second_Dansa;
+                    clock_start = gClock->now();
                     target_odo = odo + SCD_DANSA_POS;
                 }
             }
 
             break;
 
-        case Second_Dansa:
-            if(odo > target_odo){
+        case Pre_Second_Dansa:
+            if((gClock->now() - clock_start) > 1000){
                 forward    = 0;
                 Yawratecmd = 0;
-                target_tail_angle =  TAIL_ANGLE_RUN;
-                clock_start = gClock->now();
-                Step_Mode = Second_Dansa_On;
+                Step_Mode = Second_Dansa;
             }else{
-                forward    = 15;
+              forward    = -10;
+              Yawratecmd = 0;
+            }
+            break;
+            
+        case Second_Dansa:
+
+            if(dansa){
+                dansa_cnt++;
+            }
+        
+            if(dansa_cnt < 50){
+                if(odo > target_odo - 30){
+                    forward    = 0;
+                    Yawratecmd = 0;
+                    target_tail_angle =  TAIL_ANGLE_RUN;
+                    clock_start = gClock->now();
+                    Step_Mode = Second_Dansa_On;
+                    gStep->SetInitPIDGain(0.1,0.005,0.05,dT_4ms);
+                    dansa = 0;
+                }else{
+                    forward    =  STEP_CLIMB_SPPED;
+                    Yawratecmd = 0;
+                    clock_start = gClock->now();
+                }
+            }else{
+                forward = -10;
                 Yawratecmd = 0;
+                if((gClock->now() - clock_start) > 1000){
+                    dansa_cnt = 0;
+                }
             }
             break;
 
@@ -267,7 +330,7 @@ int DifficultCtrl::StepRunner(
         case Second_Dansa_On:
             gStep->SetInitPIDGain(0.1,0.005,0.05,dT_4ms);
             forward = gStep->CalcPIDContrInput(target_odo, odo);
-            forward = forward * 0.1;
+            forward = forward * 0.5;
             Yawratecmd = 0;
             anglecommand = target_tail_angle;
 
@@ -290,7 +353,7 @@ int DifficultCtrl::StepRunner(
                 tail_mode_lflag = true;
                 Step_Mode = Second_Turn;
                 clock_start = gClock->now();
-                target_angle = angle + RAD_450_DEG + RAD_5_DEG;
+                target_angle = angle + RAD_450_DEG + RAD_15_DEG;
             }
             break;
 
@@ -300,7 +363,6 @@ int DifficultCtrl::StepRunner(
                 if(angle >= target_angle){
                     //Step_Mode = Second_Dansa_Stand_Up;
                     Step_Mode = Second_Pre_Stand_Up;
-                    target_odo = odo + 50;
                     clock_start = gClock->now();
                     forward    = 0;
                     Yawratecmd = 0;
@@ -319,99 +381,65 @@ int DifficultCtrl::StepRunner(
 
         case Second_Pre_Stand_Up:
             forward = 10;
-            y_t = -0.5*(5*PAI - angle);
+            y_t = -10.0*(5*PAI - angle);
             Yawratecmd = y_t;
             tail_mode_lflag = true;
 
-            if((gClock->now() - clock_start) > 1500){
+            if((gClock->now() - clock_start) > 2500){
                 forward    = 0;
                 Yawratecmd = 0;
                 tail_mode_lflag = true;
                 clock_start = gClock->now();
                 Step_Mode = Second_Dansa_Stand_Up;
+                target_odo = odo + 150;
             }
 
             break;
 
         case Second_Dansa_Stand_Up:
-
-            if((gClock->now() - clock_start) > 15000){
-                forward    = 0;
-                Yawratecmd = 0;
-                anglecommand = TAIL_ANGLE_RUN;
-                Step_Mode = Approach_to_Exit;
-                clock_start = gClock->now();
-                tail_mode_lflag = false;
-            }
-
             if((gClock->now() - clock_start) > 3000){
                 forward    = 0;
                 Yawratecmd = 0;
-
+        
                 anglecommand = TAIL_ANGLE_RUN;
                 tail_mode_lflag = false;
-
                 if(Robo_balance_mode == true){
-                    forward    = 0;
+                    forward    = 40;
                     Yawratecmd = 0;
                     anglecommand = TAIL_ANGLE_RUN;
                     Step_Mode = Approach_to_Exit;
                     clock_start = gClock->now();
-
-                    #ifdef STEP_DEBUG
-                    //    Step_Mode =  First_Dansa;
-                    //    target_odo = odo + 250; //for debug
-                    //    clock_start = gClock->now();
-                    #endif
-
                 }
             }else{
-                forward = 0;
-                Yawratecmd = 0;
                 tail_mode_lflag = true;
+                forward    = 0;
+                Yawratecmd = 0;
             }
-
-
             break;
 
         case Approach_to_Exit:
 
             forward    = 20;
-
-            y_t = -0.5*(5*PAI - angle);
-            #ifdef STEP_DEBUG
-            //    y_t = -0.5*(4.5*PAI - angle);
-            #endif
-
-            Yawratecmd = y_t;
-
-
-            if(dansa){
-                forward    = 20;
-                Yawratecmd = 0;
-                ret = 1;
-            }
+            Yawratecmd =  0;
             if(odo > target_odo){
                 forward    = 20;
                 Yawratecmd = 0;
                 ret = 1;
             }
-
-
             break;
 
         case Change_Left_Edge_Trace:
 
-        break;
+            break;
 
         case End_of_Step:
 
-        break;
+            break;
 
         default:
             Yawratecmd = 0;
             forward = 0;
-        break;
+            break;
     }
     return(ret);
 }
@@ -440,7 +468,6 @@ int DifficultCtrl::LookUpGateRunner(
     static float target_angle;
     static int32_t clock_start;
     static float ref_angle;
-
 
     switch(LUG_Mode){
 

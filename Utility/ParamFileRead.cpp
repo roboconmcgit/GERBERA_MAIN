@@ -7,11 +7,6 @@ int ParamFileRead::setParameters(void){
     //intデータ
     //GetFileData_int("XXXXX", &XXXXX);
 
-    GetFileData_int("Approach_to_LUG_time", &Approach_to_LUG_time);
-    GetFileData_int("LUG_Tail_On_time", &LUG_Tail_On_time);
-    GetFileData_int("LUG_Tail_On_fowrd", &LUG_Tail_On_fowrd);
-    GetFileData_int("LUG_Tailangle_fowrd", &LUG_Tailangle_fowrd);
-    
     GetFileData_int("SONAR_DIST", &SONAR_DIST);
     GetFileData_int("GARAGE_LIT_DIST", &GARAGE_LIT_DIST);
 #if 0
@@ -25,9 +20,6 @@ int ParamFileRead::setParameters(void){
     GetFileData_int("RoboTread", &RoboTread);
 #endif
     //floatデータ
-    GetFileData_float("LineTracer_KP", &LineTracer_KP);
-    GetFileData_float("LineTracer_KI", &LineTracer_KI);
-    GetFileData_float("LineTracer_KD", &LineTracer_KD);
 #if 0
     //GetFileData_float("XXXXX", &XXXXX);
     GetFileData_float("FINAL_STRAIGHT_LENGTH", &FINAL_STRAIGHT_LENGTH);
