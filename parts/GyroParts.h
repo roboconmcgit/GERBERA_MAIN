@@ -30,9 +30,9 @@ private:
 
 //protected:
 
-	int gyro_250d[250];
 public:
     bool  dansa     = 0;
+	int gyro_250d[250];
     
     GyroParts();                       //コンストラクタ
     ~GyroParts();                      //デストラクタ
@@ -40,7 +40,7 @@ public:
                                         //キャリブレーションを設定する
     void GyroPartsReset();
                                         //ジャイロパーツをリセットする
-    int32_t GetGyroPartsData();
+    int16_t GetGyroPartsData();
                                         //ジャイロセンサの現在値を取得する
     void  GyroPartsTask();
                                         

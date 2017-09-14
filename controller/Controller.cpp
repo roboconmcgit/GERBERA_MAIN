@@ -46,6 +46,8 @@ Controller::Controller(
 #if 0
     gDifficultCtrl = new DifficultCtrl(gCruiseCtrl);
 #endif
+//デバッグ
+gAng_Brain = new Ang_Brain();
 }
 
 //*****************************************************************************
@@ -62,6 +64,8 @@ Controller::~Controller(){
 	delete gTouchParts;
 
 	delete gBalancer;
+
+	delete gAng_Brain;
 }
 
 //*****************************************************************************
@@ -71,6 +75,8 @@ Controller::~Controller(){
 // 概要 : 
 //*****************************************************************************
 void Controller::ControllerInit(){
+	Track_Mode = Start_to_1st_Corner;
+	gAng_Brain->init();
 	gCruiseCtrl->init();  //
 }
 
@@ -81,19 +87,76 @@ void Controller::ControllerInit(){
 // 概要 : 
 //*****************************************************************************
 void Controller::ControllerOperation(){
+	mLinevalue         = gColorParts->linevalue;
+	mLinevalue_LUG     = gColorParts->linevalue_LUG;   //ライン検出値
+	mXvalue            = gMotorParts->xvalue;
+	mYvalue            = gMotorParts->yvalue;
+	mOdo               = gMotorParts->odo;
+	mSpeed             = gMotorParts->velocity;
+	mYawrate           = gMotorParts->yawrate;
+	mYawangle          = gMotorParts->abs_angle;
+	mTail_angle        = gMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO);
+	mRobo_stop         = gMotorParts->robo_stop;
+	mRobo_forward      = gMotorParts->robo_forward;
+	mRobo_back         = gMotorParts->robo_back;
+	mRobo_turn_left    = gMotorParts->robo_turn_left;
+	mRobo_turn_right   = gMotorParts->robo_turn_right;
+	mDansa             = gGyroParts->dansa;
+	mDet_gray          = gColorParts->det_gray;
+	mSonar             = gSonarParts->sonarDistance;
+	//mRobo_balance_mode = robo_balance_mode;
 
-	//Running Strategy Determination->Robo Command
-	Track_run();
-	
+	//Track_run();
+	gAng_Brain->setEyeCommand(
+		gColorParts->linevalue,
+		gColorParts->linevalue_LUG,   //ライン検出値
+		gMotorParts->xvalue,
+		gMotorParts->yvalue,
+		gMotorParts->odo,
+		gMotorParts->velocity,
+		gMotorParts->yawrate,
+		gMotorParts->abs_angle,
+		gMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO),
+		gMotorParts->robo_stop,
+		gMotorParts->robo_forward,
+		gMotorParts->robo_back,
+		gMotorParts->robo_turn_left,
+		gMotorParts->robo_turn_right,
+		gGyroParts->dansa,
+		gColorParts->det_gray,
+		gSonarParts->sonarDistance
+	);//指令値をあなごの脳みそに渡す
+
+	//gAng_Brain->setRoboCommand(gAng_Robo->balance_mode);//指令値をあなごの脳みそに渡す
+  gAng_Brain->SetSysMode(static_cast<int>(mSys_Mode));
+	gAng_Brain->run();
+
+	gCruiseCtrl->setCommand(gAng_Brain->forward,
+		gAng_Brain->yawratecmd,
+		gAng_Brain->anglecommand,
+		gMotorParts->yawrate,
+		gAng_Brain->tail_mode_lflag);//指令値をあなご手足に渡す
+#if 0
 	gCruiseCtrl->setCommand(forward,
 		yawratecmd,
 		anglecommand,
 		gMotorParts->yawrate,
-		tail_mode_lflag);//指令値をあなご手足に渡す
+		tail_mode_lflag);//指令値渡す
+#endif
 
-	if(mSys_Mode == START){
-		gCruiseCtrl->CruiseCtrlOperation();
-	}
+	//if(mSys_Mode == START){
+	//	gCruiseCtrl->CruiseCtrlOperation();
+	//}
+}
+
+//*****************************************************************************
+// 関数名 : ControllerOperation
+// 引数 : 
+// 返り値 : なし
+// 概要 : 
+//*****************************************************************************
+void Controller::run(){
+	gCruiseCtrl->CruiseCtrlOperation();
 }
 
 //*****************************************************************************

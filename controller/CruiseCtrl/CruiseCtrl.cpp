@@ -65,15 +65,14 @@ void CruiseCtrl::CruiseCtrlOperation() {
   
 	//アクティブヨーレート();
 	mTurn = YawrateController(mYawrate, mYawratecmd);
-
-
+	
 	if(mTailModeFlag == true){
 		tail_stand_from_balance();
 	}else if((mTailModeFlag == false) && (Stand_Mode != Balance_Mode)){
-	if(Stand_Mode == Tail_Stand){
-		Stand_Mode = Stand_Vert;
-	}
-	tail_stand_from_balance();
+		if(Stand_Mode == Tail_Stand){
+			Stand_Mode = Stand_Vert;
+		}
+		tail_stand_from_balance();
 
 	}else{
 		mMotorParts->tail_control(mAngleCommand);
@@ -547,7 +546,7 @@ float CruiseCtrl::LineTracerYawrate(int line_value, float Max_Yawrate, float Min
 	if(y_t < -10.0) y_t = -10.0;
 	y_t = y_t + 7.0*(y_t/8.0)*(y_t/8.0)*(y_t/8.0);
 //    yawratecmd = y_t/4.0;
-	int Yawratecmd = (y_t/4.0)*(pg + df*(y_t-y_t_prev));
+	float Yawratecmd = (y_t/4.0)*(pg + df*(y_t-y_t_prev));
 
 	if(Yawratecmd > Max_Yawrate){
 		Yawratecmd =  Max_Yawrate;

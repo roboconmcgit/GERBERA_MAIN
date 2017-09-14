@@ -169,13 +169,13 @@ static void sys_destroy(){
 #ifdef LOG_RECORD
 static void log_dat( ){
 
-  log_dat_00[log_cnt]  = 0;
-  log_dat_01[log_cnt]  = 0;
-  log_dat_02[log_cnt]  = gSonarParts->sonarDistance;
-  log_dat_03[log_cnt]  = 0;
-  log_fdat_00[log_cnt] = gMotorParts->abs_angle;
-  log_fdat_01[log_cnt] = 0;
-  log_fdat_02[log_cnt] = gMotorParts->odo;
+  log_dat_00[log_cnt]  = gColorParts->linevalue;
+  log_dat_01[log_cnt]  = gGyroParts->GetGyroPartsData();
+  log_dat_02[log_cnt]  = gGyroParts->gyro_250d[0];
+  log_dat_03[log_cnt]  = gController->gAng_Brain->forward;
+  log_fdat_00[log_cnt] = gMotorParts->velocity;
+  log_fdat_01[log_cnt] = gMotorParts->yawrate;
+  log_fdat_02[log_cnt] = gMotorParts->abs_angle;
 
   log_cnt++;
   if (log_cnt == log_size){
@@ -194,7 +194,7 @@ static void export_log_dat( ){
     int battery = ev3_battery_voltage_mV();
     file_id = fopen( "log_dat.csv" ,"w");
     fprintf(file_id, "battery:%d\n",battery);
-    fprintf(file_id, "cnt,tail_mode,balance,sonarDistance,forward_ord,angle,right_pwm,odo\n");
+    fprintf(file_id, "cnt,linevalue,gyro,gyro2,log_right_pwm,mTurn,mYawratecmd,mYawrate\n");
     int cnt;
 
     for(cnt = 0; cnt < log_size ; cnt++){
@@ -230,7 +230,7 @@ void eye_task(intptr_t exinf) {
   }
 #endif
   if (emergencyStop(gMotorParts->velocity)) {
-    wup_tsk(MAIN_TASK);
+  //  wup_tsk(MAIN_TASK);
   }
 
   if (ev3_button_is_pressed(BACK_BUTTON)) {
@@ -242,9 +242,71 @@ void eye_task(intptr_t exinf) {
     gSonarParts->SonarPartsTask();
     gTouchParts->TouchPartsTask();
 
+  }
+  ext_tsk();
+}
+
+//*****************************************************************************
+// 関数名 : 
+// 引数 : 
+// 返り値 : 
+// 概要 : 
+//*****************************************************************************
+//Anago Brain Task
+void brain_cyc(intptr_t exinf) {
+  act_tsk(BRAIN_TASK); //0817 tada
+}
+
+//*****************************************************************************
+// 関数名 : 
+// 引数 : 
+// 返り値 : 
+// 概要 : 
+//*****************************************************************************
+void brain_task(intptr_t exinf) {
+
+  if (ev3_button_is_pressed(BACK_BUTTON)) {
+      wup_tsk(MAIN_TASK);  // バックボタン押下
+
+  } else {
+
     gController->ControllerOperation();
   }
   ext_tsk();
+}
+
+//*****************************************************************************
+// 関数名 : 
+// 引数 : 
+// 返り値 : 
+// 概要 : 
+//*****************************************************************************
+//Anago Robo(Teashi) Task
+void robo_cyc(intptr_t exinf) {
+  act_tsk(ROBO_TASK);
+
+}
+
+//*****************************************************************************
+// 関数名 : 
+// 引数 : 
+// 返り値 : 
+// 概要 : 
+//*****************************************************************************
+void robo_task(intptr_t exinf) {
+
+#ifdef LOG_RECORD  
+if (gTouchParts->GetTouchPartsData()){
+  wup_tsk(MAIN_TASK);
+}
+#endif
+
+if (ev3_button_is_pressed(BACK_BUTTON)) {
+  wup_tsk(MAIN_TASK);  // バックボタン押下
+} else {
+  gController->run();
+}
+ext_tsk();
 }
 
 //*****************************************************************************
@@ -301,7 +363,7 @@ void main_task(intptr_t unused) {
   gController->mSys_Mode = WAIT_FOR_START;
 
   ev3_sta_cyc(EYE_CYC);
-//  ev3_sta_cyc(BRAIN_CYC);
+  ev3_sta_cyc(BRAIN_CYC);
   
   ev3_lcd_draw_string("Set GERBERA on Start Line",0, 40);
   ev3_lcd_draw_string("PRESS TS or 1",0, 80);
@@ -332,14 +394,14 @@ void main_task(intptr_t unused) {
     TAIL_ANGLE_STAND_UP++;
   }
   
-//  ev3_sta_cyc(ROBO_CYC);
+  ev3_sta_cyc(ROBO_CYC);
   ter_tsk(BT_TASK);
   slp_tsk();  // バックボタンが押されるまで待つ
 
   gController->mSys_Mode = STOP;
   ev3_stp_cyc(EYE_CYC);
-//  ev3_stp_cyc(BRAIN_CYC);
-//  ev3_stp_cyc(ROBO_CYC);
+  ev3_stp_cyc(BRAIN_CYC);
+  ev3_stp_cyc(ROBO_CYC);
 
   gMotorParts->stopMotorPartsLeftRight();
 

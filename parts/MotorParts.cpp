@@ -288,8 +288,8 @@ void MotorParts::WheelOdometry(float dT) {
 	static float Dlpfd = 0; // LPF
 	//////////////////////////////////////////
 	static float old_rel_angle;     //過去のYaw角[rad]
-	int   WheelAngRdeg = getMotorPartsPwm(MOTORPARTS_RIGHT_NO);  //右モータ回転角度[deg]
-	int   WheelAngLdeg = getMotorPartsPwm(MOTORPARTS_LEFT_NO);   //右モータ回転角度[deg]
+	int   WheelAngRdeg = rightMotor.getCount();  //右モータ回転角度[deg]
+	int   WheelAngLdeg = leftMotor.getCount();   //右モータ回転角度[deg]
 	int i;
   
 	odo            = ((float)WheelAngLdeg + (float)WheelAngRdeg)/2.0 * RAD_1_DEG * WHEEL_R; //[mm]

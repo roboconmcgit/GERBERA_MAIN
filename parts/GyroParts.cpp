@@ -70,9 +70,8 @@ void GyroParts::GyroPartsReset(){
 // 返り値 : なし
 // 概要 : ジャイロセンサの現在値を取得する
 //*****************************************************************************
-int32_t GyroParts::GetGyroPartsData(){
-	int32_t ret = gyroSensor.getAnglerVelocity();
-	return(ret);
+int16_t GyroParts::GetGyroPartsData(){
+	return(gyroSensor.getAnglerVelocity());
 }
 
 //*****************************************************************************
@@ -83,7 +82,7 @@ int32_t GyroParts::GetGyroPartsData(){
 //*****************************************************************************
 void GyroParts::GyroPartsTask() {
 	int cnt;
-	gyro_250d[0] = GetGyroPartsData();
+	gyro_250d[0] = gyroSensor.getAnglerVelocity();
   
 	for(cnt =9; cnt > 0; cnt--){
 	  gyro_250d[cnt] = gyro_250d[cnt-1];

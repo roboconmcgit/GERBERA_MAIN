@@ -49,12 +49,6 @@ private:
       };
       enumStand_Mode  Stand_Mode;
 
-    int   mForward;
-    float mTurn;
-    float mYawratecmd;//目標Yawrate
-    float mYawrate;
-
-    bool mTailModeFlag;//0816
    
     signed int mAngleCommand;
     //17.07.28 kota copy from 3-apex
@@ -64,7 +58,7 @@ private:
 
     float turn_tmp;
     float r_yaw_rate = 0.0;
-    float r_yaw_rate_ud;
+    float r_yaw_rate_ud = 0.0;
     float I_gain1 = 1.0+1.0/0.8;
     float I_gain2 = yaw_ctl_dt/0.06/0.8;
     float I_gain3 = 1.0-yaw_ctl_dt/0.06;
@@ -114,8 +108,6 @@ private:
     float Pd_ud1 = 0.0;
 
     void TailMode(int mForward, float mTurn); //PWM Gen. without Balancer task 0814
-    int mtail_mode_pwm_l;
-	int mtail_mode_pwm_r;
 
     bool balance_off_en;
     bool pre_balancer_on;
@@ -133,18 +125,15 @@ private:
     deque<float> dsave_log10;
 #endif
 
-    int   log_forward;
-    int   log_turn;
-    int   log_gyro;
-    int   log_left_wheel_enc;
-    int   log_right_wheel_enc;
-    int   log_battery;
-    int   log_left_pwm;
-    int   log_right_pwm;
+    int   mForward;
+    float mTurn;
+
+    int mtail_mode_pwm_l;
+    int mtail_mode_pwm_r;
 
     // LineTracerYawrate
-    float y_t;
-    float y_t_prev; //0818 tada. passed y_t
+    float y_t=0;
+    float y_t_prev=0; //0818 tada. passed y_t
 //protected:
 public:
     static const int LOW;
@@ -159,6 +148,20 @@ public:
     int   mmTurn;
     float mmYawratecmd;//目標Yawrate
     float mmYawrate;
+
+    float mYawratecmd;//目標Yawrate
+    float mYawrate;
+
+    bool mTailModeFlag;//0816
+    
+    int   log_forward;
+    int   log_turn;
+    int   log_gyro;
+    int   log_left_wheel_enc;
+    int   log_right_wheel_enc;
+    int   log_battery;
+    int   log_left_pwm;
+    int   log_right_pwm;
 
     // LineTracerYawrate
     float pg = 0.35;//暫定0.9 //0818 tada

@@ -6,6 +6,9 @@
  *  Copyright (c) 2015 Embedded Technology Software Design Robot Contest
  *****************************************************************************/
 
+#ifndef BRAIN_LIB_H_
+#define BRAIN_LIB_H_
+
 #include <deque>
 //#define DEBUG
 
@@ -40,3 +43,6 @@ private:
     deque<float> delay;
 
 };
+
+
+#endif // !BRAIN_LIB_H_

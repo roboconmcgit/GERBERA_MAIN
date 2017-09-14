@@ -19,6 +19,9 @@ APPL_CXXOBJS += \
 	CruiseCtrl.o \
 	DifficultCtrl.o \
 	Controller.o \
+    Strategy_Det.o \
+    Command_Calc.o \
+    ang_brain.o \
 #	lcdDraw.o \
 #	logging.o \
 #	ClockTimer.o \
