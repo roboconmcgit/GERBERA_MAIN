@@ -84,17 +84,20 @@ public:
     DifficultCtrl(CruiseCtrl* Cruise);     //コンストラクタ
     ~DifficultCtrl();                      //デストラクタ
 
-	void init ();
+    void init ();
+    float LineTracerYawrate(int line_value); //Dummy
+    float LineTracer(int line_value, float traceforward);
+    
     int StartDashRunner();                              //スタートダッシュ
     int StepRunner(
         int line_value, 
-        float odo, 
+        float mOdo, 
         float angle, 
         bool dansa, 
-        bool Robo_balance_mode,
+        bool mRobo_balance_mode,
         int &forward,
+        float &yawratecmd,
         float &anglecommand,
-        float &Yawratecmd,
         bool &tail_mode_lflag,
         float &ref_x,
         float mXvalue
@@ -104,17 +107,17 @@ public:
         float odo, 
         float angle,
         int line_value, 
-        bool Robo_balance_mode,
+        bool mRobo_balance_mode,
         int &forward,
+        float &yawratecmd,
         float &anglecommand,
-        float &Yawratecmd,
         bool &tail_mode_lflag
     );
-    int GarageRunner(int line_value_lug, float odo, float angle,int line_value);                                 //ガレージ走行
+    int GarageRunner(int line_value_lug, float mOdo, float angle,int line_value);                                 //ガレージ走行
     int StopRobo(
         int &forward,
+        float &yawratecmd,
         float &anglecommand,
-        float &Yawratecmd,
         bool &tail_mode_lflag
     );                                     //ロボット停止
     

@@ -45,13 +45,13 @@ float FST_DANSA_POS         = 260;
 float SCD_DANSA_POS         = 260;
 int   STEP_CLIMB_SPPED      = 15;
 
-float GARAGE_X_POS          = 1100;
+float GARAGE_X_POS          = 1000;
 float GARAGE_LENGTH         =  150;
 
-int   SONAR_DIST            = 70;
-int   GARAGE_LIT_DIST       = 50;
+int   SONAR_DIST            = 75;
+int   GARAGE_LIT_DIST       = 48;
 float GRAY_TO_GARAGE_LENGTH =  200;
-float STEP_TO_GARAGE_LENGTH = 1100;
+float STEP_TO_GARAGE_LENGTH = 11100;
 
 #ifdef RIGHT_MODE
 //Parameter of Course

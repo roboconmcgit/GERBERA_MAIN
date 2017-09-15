@@ -28,11 +28,16 @@ private:
     bool SonarParts_State;                  //状態フラグ　0:正常、1:以上
     int   sonar_counter = 0;
     int32_t Fillter_Data[SONAR_FILLTER_NUM];                  //フィルタ用格納データ
+
+    int16_t oldSonar = 255;
+    int16_t oldDsonar = 0;
+    int Obstacle_cnt = 0;
 //protected:
 
 public:
     int16_t sonarDistance = 0; // 距離 [cm]
     bool  sonar_stop  = false;
+    bool  Obstacle = false;
 
     SonarParts();                       //コンストラクタ
     ~SonarParts();                      //デストラクタ

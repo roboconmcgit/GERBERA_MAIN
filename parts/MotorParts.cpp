@@ -278,139 +278,144 @@ void MotorParts::tail_stand_up(){
 // 概要 : 
 //*****************************************************************************
 void MotorParts::WheelOdometry(float dT) {
-	static float odo_prev;
-	static float velocity_input;
-	static float velocity_prev;
-	//LPF 10[rad/s]/////////////////////////////////////
-	static float Alpfd = 0.9391; // LPF
-	static float Blpfd = 1; // LPF
-	static float Clpfd = 0.0609; // LPF
-	static float Dlpfd = 0; // LPF
-	//////////////////////////////////////////
-	static float old_rel_angle;     //過去のYaw角[rad]
-	int   WheelAngRdeg = rightMotor.getCount();  //右モータ回転角度[deg]
-	int   WheelAngLdeg = leftMotor.getCount();   //右モータ回転角度[deg]
-	int i;
+  static float odo_prev;
+  static float velocity_input;
+  static float velocity_prev;
+  //LPF 10[rad/s]/////////////////////////////////////
+  static float Alpfd = 0.9391; // LPF
+  static float Blpfd = 1; // LPF
+  static float Clpfd = 0.0609; // LPF
+  static float Dlpfd = 0; // LPF
+  //////////////////////////////////////////
+  static float old_rel_angle;     //過去のYaw角[rad]
+  int   WheelAngRdeg = rightMotor.getCount();  //右モータ回転角度[deg]
+  int   WheelAngLdeg = leftMotor.getCount();   //右モータ回転角度[deg]
+  int i;
+
+  odo            = ((float)WheelAngLdeg + (float)WheelAngRdeg)/2.0 * RAD_1_DEG * WHEEL_R; //[mm]
+  velocity_input = (odo - odo_prev)/dT;
+  velocity       = Clpfd * velocity_prev + Dlpfd * velocity_input;
+  velocity_prev  = Alpfd * velocity_prev + Blpfd * velocity_input;
   
-	odo            = ((float)WheelAngLdeg + (float)WheelAngRdeg)/2.0 * RAD_1_DEG * WHEEL_R; //[mm]
-	velocity_input = (odo - odo_prev)/dT;
-	velocity       = Clpfd * velocity_prev + Dlpfd * velocity_input;
-	velocity_prev  = Alpfd * velocity_prev + Blpfd * velocity_input;
-	
-	xvalue = xvalue+(-1)*(odo-odo_prev)*sin(relative_angle);
-	yvalue = yvalue+(odo-odo_prev)*cos(relative_angle);    
-  
-	relative_angle =  ((float)WheelAngRdeg - (float)WheelAngLdeg) * RAD_1_DEG * WHEEL_R / RoboTread; //ロボのYaw角[rad]
-	relative_angle = relative_angle + correction_angle;
-	abs_angle      = relative_angle + RAD_90_DEG + correction_angle;
-  #ifdef DEBUG_NANSYO
-	abs_angle      = relative_angle;
-  #endif
-	yawrate  =(relative_angle-old_rel_angle)/dT;           //ロボのYawレート[rad/s]
-  
-	old_rel_angle=relative_angle;         //過去のYaw角[rad]
-	odo_prev = odo;
-  
-	switch(enum_Mode){
-	case CALIB_ANGLE:  
-	  robo_stop       = 0;
-	  robo_forward    = 1;
-	  robo_back       = 0;
-	  robo_turn_left  = 0;
-	  robo_turn_right = 0;
-	  //Correct absolute angle
-	  if(odo > 500 && odo <= 1500 && cap_cnt < cap_size){
-		//cap_dat[cap_cnt] = abs_angle;
-		angle_sum_dat = angle_sum_dat + abs_angle;
-		cap_cnt++;
-	  }else if(odo > 1500 && odo <= 1505){
-		angle_ave_dat = angle_sum_dat/cap_cnt;
-		correction_angle = RAD_90_DEG - angle_ave_dat;
-		xvalue = 0.0;
-		yvalue = 1505;
-  
-		enum_Mode = DET_MOVEMENT;
-		angle_sum_dat = 0;
-		cap_cnt = 0;
-	  }else{
-		cap_cnt = 0;
-		angle_sum_dat = 0.0;
-		angle_ave_dat = 0.0;
-	  }
-	  break;
-  
-	case DET_MOVEMENT:
-  
-	  if(cap_cnt == 125){
-		cap_cnt = 0;
-	  }
-	  angle_dat_500ms[cap_cnt]    = abs_angle;
-	  velocity_dat_500ms[cap_cnt] = velocity;
-	  cap_cnt++;
-  
-	  angle_sum_dat    = 0;    
-	  velocity_sum_dat = 0;
-  
-	  for (i=0; i<125; i++){
-		angle_sum_dat    = angle_sum_dat    + angle_dat_500ms[i];
-		velocity_sum_dat = velocity_sum_dat + velocity_dat_500ms[i];
-	  }
-  
-	  angle_ave_dat    = angle_sum_dat/125;
-	  velocity_ave_dat = velocity_sum_dat/125;
-  
-	  dif_angle_ave_dat    = angle_ave_dat - old_angle_ave_dat;
-	  dif_velocity_ave_dat = velocity_ave_dat - old_velocity_ave_dat;
-  
-	  old_angle_ave_dat    = angle_ave_dat;
-	  old_velocity_ave_dat = velocity_ave_dat;
-  
-	  if (dif_angle_ave_dat > -0.001 && dif_angle_ave_dat < 0.001){
-  
-		if(velocity_ave_dat > 0){
-	  robo_stop       = 0;
-	  robo_forward    = 1;
-	  robo_back       = 0;
-	  robo_turn_left  = 0;
-	  robo_turn_right = 0;
-		}else if (velocity_ave_dat < 0){
-	  robo_stop       = 0;
-	  robo_forward    = 0;
-	  robo_back       = 1;
-	  robo_turn_left  = 0;
-	  robo_turn_right = 0;
-		}else{
-	  robo_stop       = 1;
-	  robo_forward    = 0;
-	  robo_back       = 0;
-	  robo_turn_left  = 0;
-	  robo_turn_right = 0;
-		}
-  
-	  }else if(dif_angle_ave_dat >= 0.001){
-		robo_stop       = 0;
-		robo_forward    = 0;
-		robo_back       = 0;
-		robo_turn_left  = 1;
-		robo_turn_right = 0;
-	  }else if(dif_angle_ave_dat <= -0.001){
-		robo_stop       = 0;
-		robo_forward    = 0;
-		robo_back       = 0;
-		robo_turn_left  = 0;
-		robo_turn_right = 1;
-	  }else {
-		robo_stop       = 0;
-		robo_forward    = 0;
-		robo_back       = 0;
-		robo_turn_left  = 0;
-		robo_turn_right = 0;
-	  }
-	  
-  break;
-  
-	default:
-	  break;
-	}
+  xvalue = xvalue+(-1)*(odo-odo_prev)*sin(relative_angle);
+  yvalue = yvalue+(odo-odo_prev)*cos(relative_angle);    
+
+  relative_angle =  ((float)WheelAngRdeg - (float)WheelAngLdeg) * RAD_1_DEG * WHEEL_R / RoboTread; //ロボのYaw角[rad]
+  relative_angle = relative_angle + correction_angle;
+  abs_angle      = relative_angle + RAD_90_DEG + correction_angle;
+#ifdef DEBUG_NANSYO
+  abs_angle      = relative_angle;
+#endif
+  yawrate  =(relative_angle-old_rel_angle)/dT;           //ロボのYawレート[rad/s]
+
+  old_rel_angle=relative_angle;         //過去のYaw角[rad]
+  odo_prev = odo;
+
+  switch(enum_Mode){
+  case CALIB_ANGLE:  
+    robo_stop       = 0;
+    robo_forward    = 1;
+    robo_back       = 0;
+    robo_turn_left  = 0;
+    robo_turn_right = 0;
+    //Correct absolute angle
+    if(odo > 500 && odo <= 1500 && cap_cnt < cap_size){
+      //cap_dat[cap_cnt] = abs_angle;
+      angle_sum_dat = angle_sum_dat + abs_angle;
+      cap_cnt++;
+    }else if(odo > 1500 && odo <= 1505){
+      angle_ave_dat = angle_sum_dat/cap_cnt;
+      correction_angle = RAD_90_DEG - angle_ave_dat;
+      xvalue = 0.0;
+      yvalue = 1505;
+
+      enum_Mode = DET_MOVEMENT;
+      angle_sum_dat = 0;
+      cap_cnt = 0;
+    }else{
+      cap_cnt = 0;
+      angle_sum_dat = 0.0;
+      angle_ave_dat = 0.0;
+    }
+    break;
+
+  case DET_MOVEMENT:
+
+    if(cap_cnt == 125){
+      cap_cnt = 0;
+    }
+    angle_dat_500ms[cap_cnt]    = abs_angle;
+    velocity_dat_500ms[cap_cnt] = velocity;
+    cap_cnt++;
+
+    angle_sum_dat    = 0;    
+    velocity_sum_dat = 0;
+
+    for (i=0; i<125; i++){
+      angle_sum_dat    = angle_sum_dat    + angle_dat_500ms[i];
+      velocity_sum_dat = velocity_sum_dat + velocity_dat_500ms[i];
+
+    }
+
+    angle_ave_dat    = angle_sum_dat/125;
+    velocity_ave_dat = velocity_sum_dat/125;
+
+    dif_angle_ave_dat    = angle_ave_dat - old_angle_ave_dat;
+    dif_velocity_ave_dat = velocity_ave_dat - old_velocity_ave_dat;
+
+    old_angle_ave_dat    = angle_ave_dat;
+    old_velocity_ave_dat = velocity_ave_dat;
+
+    if (dif_angle_ave_dat > -0.001 && dif_angle_ave_dat < 0.001){
+
+      if(velocity_ave_dat > 0){
+	robo_stop       = 0;
+	robo_forward    = 1;
+	robo_back       = 0;
+	robo_turn_left  = 0;
+	robo_turn_right = 0;
+      }else if (velocity_ave_dat < 0){
+	robo_stop       = 0;
+	robo_forward    = 0;
+	robo_back       = 1;
+	robo_turn_left  = 0;
+	robo_turn_right = 0;
+      }else{
+	robo_stop       = 1;
+	robo_forward    = 0;
+	robo_back       = 0;
+	robo_turn_left  = 0;
+	robo_turn_right = 0;
+      }
+
+    }else if(dif_angle_ave_dat >= 0.001){
+      robo_stop       = 0;
+      robo_forward    = 0;
+      robo_back       = 0;
+      robo_turn_left  = 1;
+      robo_turn_right = 0;
+    }else if(dif_angle_ave_dat <= -0.001){
+      robo_stop       = 0;
+      robo_forward    = 0;
+      robo_back       = 0;
+      robo_turn_left  = 0;
+      robo_turn_right = 1;
+    }else {
+      robo_stop       = 0;
+      robo_forward    = 0;
+      robo_back       = 0;
+      robo_turn_left  = 0;
+      robo_turn_right = 0;
+    }
     
+break;
+
+  default:
+    break;
   }
+
+#ifdef DEBUG_EYE_DEBUG
+  saveData( );
+#endif
+
+}

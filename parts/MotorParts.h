@@ -81,11 +81,11 @@ private:
 
 public:
     // WheelOdometry用
-    float xvalue    = 0;//x座標推定値
-    float yvalue    = 0;//y座標推定値
+    float xvalue    = 735.96;//x座標推定値
+    float yvalue    = 415.74;//y座標推定値
 
-    float odo       = 0;//odometry
-    float velocity  = 0;//Velocity
+    float odo       = 0.0;//odometry
+    float velocity  = 0.0;//Velocity
 
     int   encR      = 0;//右側タイヤ角度
     int   encL      = 0;

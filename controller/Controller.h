@@ -24,7 +24,11 @@
 using namespace std;
 using ev3api::Clock;
 
-enum Sys_Mode{
+/*
+ *  関数のプロトタイプ宣言
+ */
+ 
+ enum Sys_Mode{
     SYS_INIT            = 110,
     BT_CONECT           = 120,
     DISPLAY_SELECT_APLI = 210,
@@ -41,10 +45,6 @@ enum Sys_Mode{
     RESET               = 0
 };
 
-/*
- *  関数のプロトタイプ宣言
- */
- 
 class Controller{
 private:
     ColorParts  *gColorParts;
@@ -93,6 +93,7 @@ public:
     int   Mmode;
     bool  mRobo_balance_mode;
 
+	bool  left_line_edge = true;
 	int   forward;         //前進目標値
 	float yawratecmd;      //目標ヨーレート
 	float anglecommand;    //尻尾角度

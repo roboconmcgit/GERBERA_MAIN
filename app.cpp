@@ -233,9 +233,12 @@ void eye_task(intptr_t exinf) {
   if (gTouchParts->GetTouchPartsIsTouch()){
     wup_tsk(MAIN_TASK);
   }
+  if (gController->mSys_Mode == GARAGE){
+    wup_tsk(MAIN_TASK);
+  }
 #endif
   if (emergencyStop(gMotorParts->velocity)) {
-    //wup_tsk(MAIN_TASK);
+    wup_tsk(MAIN_TASK);
   }
 
   if (ev3_button_is_pressed(BACK_BUTTON)) {
@@ -284,6 +287,9 @@ void robo_task(intptr_t exinf) {
 
 #ifdef LOG_RECORD  
 if (gTouchParts->GetTouchPartsIsTouch()){
+  wup_tsk(MAIN_TASK);
+}
+if (gController->mSys_Mode == GARAGE){
   wup_tsk(MAIN_TASK);
 }
 #endif

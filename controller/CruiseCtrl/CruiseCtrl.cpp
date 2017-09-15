@@ -104,13 +104,10 @@ void CruiseCtrl::CruiseCtrlOperation() {
 	log_left_pwm        = mBalancer->getPwmLeft();
 	log_right_pwm       = mBalancer->getPwmRight();
 
-	if(balance_off_en == true){
-		TailMode(mForward, mYawratecmd);
+    if((balance_off_en == true) && (mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) >  70)){
+		TailMode(mForward, mTurn);
 		mMotorParts->setMotorPartsLeftRight(mtail_mode_pwm_r,mtail_mode_pwm_l);
-		
-		balance_mode = false;
-		mMotorParts->tail_control(mAngleCommand);
-
+		balance_mode = false; 
 	}else{
 		mMotorParts->setMotorPartsLeftRight(mBalancer->getPwmRight(),mBalancer->getPwmLeft());
 		balance_mode = true;

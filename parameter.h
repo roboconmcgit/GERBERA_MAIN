@@ -13,7 +13,7 @@ extern "C" {
 #endif
 */
 
-#define RIGHT_MODE
+//#define RIGHT_MODE
 
 //#define LEFT_MODE
 

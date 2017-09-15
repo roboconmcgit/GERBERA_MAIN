@@ -76,6 +76,21 @@ void SonarParts::SonarPartsTask(){
 	//定期的にデータ取得
     if(sonar_counter%50 == 0){
 		sonarDistance = sonarSensor.getDistance();
+		
+		//Obstacle Check
+		int16_t dSonar = sonarDistance - oldSonar;
+		if((dSonar > 0)&&(oldDsonar <= 0)){
+		Obstacle_cnt++;
+		if(Obstacle_cnt > 2){
+			Obstacle = true;
+			oldDsonar = dSonar;
+			Obstacle_cnt=0;
+		}
+		}else{
+		oldDsonar = dSonar;
+		Obstacle_cnt=0;
+		}
+		oldSonar = sonarDistance;
 	  }
 	sonar_counter++;
 	if(sonar_counter>10000) sonar_counter = 0;
