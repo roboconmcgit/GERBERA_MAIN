@@ -13,7 +13,7 @@ using namespace ev3api;
 
 // キャリブレーションパラメータ
 typedef struct ColorParts_Calibra{
-    int32_t Offset;
+    //int32_t Offset;
     int8_t white;
     int8_t black;
     int8_t white_slant;

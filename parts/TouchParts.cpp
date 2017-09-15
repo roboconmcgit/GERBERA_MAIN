@@ -28,7 +28,7 @@
 //*****************************************************************************
 TouchParts::TouchParts():touchSensor(TOUCHPARTS_CH)
 {
-	memset(&TouchParts_Calib, 0, sizeof(TOUCHPARTS_CALIBRA));
+	//memset(&TouchParts_Calib, 0, sizeof(TOUCHPARTS_CALIBRA));
 	memset(&Fillter_Data[0], 0, sizeof(TOUCH_FILLTER_NUM));
 	
 	TouchParts_State = false;
@@ -52,7 +52,7 @@ TouchParts::~TouchParts(){
 // 概要 : キャリブレーションを設定する
 //*****************************************************************************
 void TouchParts::TouchPartsCalibra(TOUCHPARTS_CALIBRA s_calibra){
-	memcpy(&TouchParts_Calib, &s_calibra, sizeof(TOUCHPARTS_CALIBRA));
+	//memcpy(&TouchParts_Calib, &s_calibra, sizeof(TOUCHPARTS_CALIBRA));
 }
 
 //*****************************************************************************
@@ -103,12 +103,12 @@ bool TouchParts::GetTouchPartsData(){
 }
 
 //*****************************************************************************
-// 関数名 : GetTouchPartsFillter
+// 関数名 : GetTouchPartsIsTouch
 // 引数 : unused
 // 返り値 : フィルタリングしたタッチセンサ値
 // 概要 : タッチセンサ値をチャタリングした値を取得する
 //*****************************************************************************
-bool TouchParts::GetTouchPartsFillter(){
+bool TouchParts::GetTouchPartsIsTouch(){
 	return(IsTouch);
 }
 

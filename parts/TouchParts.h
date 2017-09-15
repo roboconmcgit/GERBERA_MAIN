@@ -42,7 +42,7 @@ public:
                                         //フィルタリング用の定期処理
     bool GetTouchPartsData();
                                         //タッチセンサセンサの現在値を取得する
-    bool GetTouchPartsFillter();
+    bool GetTouchPartsIsTouch();
                                         //タッチセンサ値をチャタリングした値を取得する
 };
 

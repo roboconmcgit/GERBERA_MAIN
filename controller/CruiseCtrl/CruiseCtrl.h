@@ -125,8 +125,6 @@ private:
     deque<float> dsave_log10;
 #endif
 
-    int   mForward;
-    float mTurn;
 
     int mtail_mode_pwm_l;
     int mtail_mode_pwm_r;
@@ -151,6 +149,8 @@ public:
 
     float mYawratecmd;//目標Yawrate
     float mYawrate;
+    int   mForward;
+    float mTurn;
 
     bool mTailModeFlag;//0816
     

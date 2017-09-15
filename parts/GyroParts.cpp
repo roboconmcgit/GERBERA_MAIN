@@ -28,7 +28,7 @@
 //*****************************************************************************
 GyroParts::GyroParts():gyroSensor(GYRO_CH)
 {
-	memset(&GyroParts_Calib, 0, sizeof(GYROPARTS_CALIBRA));
+	//memset(&GyroParts_Calib, 0, sizeof(GYROPARTS_CALIBRA));
 	memset(gyro_250d, 0, 250);
 	GyroParts_State = false;
 }
@@ -50,7 +50,7 @@ GyroParts::~GyroParts(){
 // 概要 : 全てのモータのキャリブレーションを設定する
 //*****************************************************************************
 void GyroParts::GyroPartsCalibra(GYROPARTS_CALIBRA s_calibra){
-	memcpy(&GyroParts_Calib, &s_calibra, sizeof(GYROPARTS_CALIBRA));
+	//memcpy(&GyroParts_Calib, &s_calibra, sizeof(GYROPARTS_CALIBRA));
 }
 
 //*****************************************************************************

@@ -38,7 +38,7 @@ MotorParts::MotorParts():
 	pwm2(0),
 	pwm(0)
 {
-	memset((void *)&MotorParts_Calib, 0, sizeof(MOTORPARTS_CALIBRA));
+	//memset((void *)&MotorParts_Calib, 0, sizeof(MOTORPARTS_CALIBRA));
 	memset((void *)&MotorParts_State, 0, MOTORPARTS_NUM);
 	
   enum_Mode = CALIB_ANGLE;
@@ -75,7 +75,7 @@ MotorParts::~MotorParts(){
 // 概要 : 全てのモータのキャリブレーションを設定する
 //*****************************************************************************
 void MotorParts::MotorPartsCalibra(MOTORPARTS_CALIBRA s_calibra){
-	memcpy(&MotorParts_Calib, &s_calibra, sizeof(MOTORPARTS_CALIBRA));
+	//memcpy(&MotorParts_Calib, &s_calibra, sizeof(MOTORPARTS_CALIBRA));
 }
 
 //*****************************************************************************

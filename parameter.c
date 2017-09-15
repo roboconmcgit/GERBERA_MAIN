@@ -5,6 +5,9 @@ int TAIL_ANGLE_DANSA    = 85; /* 完全停止時の角度[度]     */
 int TAIL_ANGLE_LUG      = 75; /* 3点移動時の角度[度]      */
 int TAIL_ANGLE_GARAGE   = 94; /* 完全停止時の角度[度]     */
 
+int INITIAL_WHITE_THRESHOLD = 40;  // 黒色の光センサ値
+int INITIAL_BLACK_THRESHOLD = 20;  // 黒色の光センサ値
+
 float WheelDiameter = 79.95;  //背面から見て左タイヤの直径[mm] 0817 tada
 float WHEEL_R       = 39.975; //Wheel radius
 int   RoboTread      = 160; //トレッド長さ[mm]

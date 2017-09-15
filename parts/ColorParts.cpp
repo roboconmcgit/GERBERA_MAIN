@@ -27,14 +27,10 @@
 //*****************************************************************************
 ColorParts::ColorParts():colorSensor(COLORPARTS_CH)
 {
-	memset(&ColorParts_Calib, 0, sizeof(COLORPARTS_CALIBRA));
+	//memset(&ColorParts_Calib, 0, sizeof(COLORPARTS_CALIBRA));
 	memset(&Fillter_Data[0], 0, sizeof(COLOR_FILLTER_NUM));
 	
-	ColorParts_Calib.white=40;
-	ColorParts_Calib.black=20;
-	ColorParts_Calib.white_slant=40;
-	ColorParts_Calib.black_slant=20;
-
+	ColorPartsReset();
 	ColorParts_State = false;
 }
 
@@ -55,7 +51,12 @@ ColorParts::~ColorParts(){
 // 概要 : キャリブレーションを設定する
 //*****************************************************************************
 void ColorParts::ColorPartsCalibra(COLORPARTS_CALIBRA s_calibra){
-	memcpy(&ColorParts_Calib, &s_calibra, sizeof(COLORPARTS_CALIBRA));
+	//memcpy(&ColorParts_Calib, &s_calibra, sizeof(COLORPARTS_CALIBRA));
+    ColorParts_Calib.white = s_calibra.white;
+    ColorParts_Calib.black = s_calibra.black;
+    ColorParts_Calib.white_slant = s_calibra.white_slant;
+    ColorParts_Calib.black_slant = s_calibra.black_slant;
+
 }
 
 //*****************************************************************************
@@ -65,8 +66,12 @@ void ColorParts::ColorPartsCalibra(COLORPARTS_CALIBRA s_calibra){
 // 概要 : カラーセンサパーツをリセットする
 //*****************************************************************************
 void ColorParts::ColorPartsReset(){
-	int set = GetColorPartsData();
-	memset(&Fillter_Data[0], set, sizeof(COLOR_FILLTER_NUM));
+	//int set = GetColorPartsData();
+	//memset(&Fillter_Data[0], set, sizeof(COLOR_FILLTER_NUM));
+	ColorParts_Calib.white=INITIAL_WHITE_THRESHOLD;
+	ColorParts_Calib.black=INITIAL_BLACK_THRESHOLD;
+	ColorParts_Calib.white_slant=INITIAL_WHITE_THRESHOLD;
+	ColorParts_Calib.black_slant=INITIAL_BLACK_THRESHOLD;
 }
 
 //*****************************************************************************

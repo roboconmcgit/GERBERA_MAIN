@@ -25,6 +25,9 @@ extern "C" {
 #define SONARPARTS_CH         (PORT_2)
 #define TOUCHPARTS_CH         (PORT_1)
 
+extern int INITIAL_WHITE_THRESHOLD;
+extern int INITIAL_BLACK_THRESHOLD;
+
 #define LIGHT_WHITE          40  /* 白色の光センサ値 */
 #define LIGHT_BLACK           0  /* 黒色の光センサ値 */
 //#define TAIL_ANGLE_STAND_UP  80  /* 完全停止時の角度[度] */

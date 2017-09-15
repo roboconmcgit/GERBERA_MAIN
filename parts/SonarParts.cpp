@@ -28,7 +28,7 @@
 //*****************************************************************************
 SonarParts::SonarParts():sonarSensor(SONARPARTS_CH)
 {
-	memset(&SonarParts_Calib, 0, sizeof(SONARPARTS_CALIBRA));
+	//memset(&SonarParts_Calib, 0, sizeof(SONARPARTS_CALIBRA));
 	memset(&Fillter_Data[0], 0, sizeof(SONAR_FILLTER_NUM));
 	
 	SonarParts_State = false;
@@ -51,7 +51,7 @@ SonarParts::~SonarParts(){
 // 概要 : キャリブレーションを設定する
 //*****************************************************************************
 void SonarParts::SonarPartsCalibra(SONARPARTS_CALIBRA s_calibra){
-	memcpy(&SonarParts_Calib, &s_calibra, sizeof(SONARPARTS_CALIBRA));
+	//memcpy(&SonarParts_Calib, &s_calibra, sizeof(SONARPARTS_CALIBRA));
 }
 
 //*****************************************************************************

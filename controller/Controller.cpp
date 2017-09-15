@@ -74,7 +74,7 @@ Controller::~Controller(){
 //*****************************************************************************
 void Controller::ControllerInit(){
 	Track_Mode = Start_to_1st_Corner;
-  mYaw_angle_offset = 0.0;
+  	mYaw_angle_offset = 0.0;
 	gCruiseCtrl->init();  //
 	gDifficultCtrl->init();
 }
@@ -106,7 +106,7 @@ void Controller::ControllerOperation(){
 #ifdef RIGHT_MODE
 	mSonar             = gSonarParts->sonarDistance;
 #else
-  mSonar						 = 0;
+  	mSonar			   = 0;
 #endif
 	mRobo_balance_mode = gCruiseCtrl->balance_mode;
 
@@ -139,12 +139,11 @@ void Controller::Track_run() {
 	float Max_Yawrate;
 	float Min_Yawrate;
 	static float   ref_odo;
-  static bool    line_det;
+  	static bool    line_det;
 #ifdef RIGHT_MODE
 #else
 	static float   ref_angle;
 #endif
-	
 	static int32_t clock_start;
 	int dammy_line_value;
 	int speedcal = 0;
@@ -155,7 +154,7 @@ void Controller::Track_run() {
 
 		case Start_to_1st_Corner:
 
-			forward =  50;
+			forward =  100;
 			Max_Yawrate = 1.5;
 			Min_Yawrate = -1.5;
 			yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, Max_Yawrate, Min_Yawrate);
@@ -168,7 +167,7 @@ void Controller::Track_run() {
 			break;
 
 		case Snd_Corner:
-			forward =  50;
+			forward =  100;
 			Max_Yawrate = 5.0;
 			Min_Yawrate = -5.0;
 			yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, Max_Yawrate, Min_Yawrate);
@@ -184,7 +183,7 @@ void Controller::Track_run() {
 		break;
 
 		case Final_Corner:
-			forward =  50;
+			forward =  100;
 			Max_Yawrate = 5.0;
 			Min_Yawrate = -5.0;
 			yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, Max_Yawrate, Min_Yawrate);
@@ -198,7 +197,7 @@ void Controller::Track_run() {
 		break;
 
 		case Final_Straight:
-			forward =  50;
+			forward =  100;
 			Max_Yawrate = 1.0;
 			Min_Yawrate = -1.0;
 			yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, Max_Yawrate, Min_Yawrate);
@@ -260,7 +259,6 @@ void Controller::Track_run() {
 			if((mYawangle <  MINUS_RAD_5_DEG)&&(yawratecmd > 0) ){
 				yawratecmd = 0.0;
 			}
-
 
 			if((mYawangle > 2.5) &&(mRobo_forward == 1)){
 				forward =  30;

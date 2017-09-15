@@ -83,13 +83,10 @@ void CruiseCtrl::CruiseCtrlOperation() {
 	mBalancer->setCommand(mForward, mYawratecmd);
 #endif
 
-
 	int battery = ev3_battery_voltage_mV();
-
 	if((Stand_Mode == Stand_to_Balance)&&(log_left_pwm < -10)){
 		mBalancer->setCommand(mForward, mTurn);
 		mBalancer->update(10, rightWheelEnc, leftWheelEnc, battery);
-
 	}else if((Stand_Mode == Stand_to_Balance)&&(log_left_pwm > 10)){
 		mBalancer->setCommand(mForward, mTurn);
 		mBalancer->update(-10, rightWheelEnc, leftWheelEnc, battery);

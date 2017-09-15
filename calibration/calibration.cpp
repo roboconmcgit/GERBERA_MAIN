@@ -14,7 +14,6 @@ int calibration::set_calibration(){
   COLORPARTS_CALIBRA color_calib;
   int error = 0;
 //0729 kota Color Sensor Calibration
-  color_calib.Offset      = 0;
   color_calib.white       = 60;
   color_calib.black       = 2;
   color_calib.white_slant = 12;

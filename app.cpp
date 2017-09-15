@@ -46,7 +46,8 @@ static int   log_dat_02[15000];
 static int   log_dat_03[15000];
 static float log_fdat_00[15000];
 static float log_fdat_01[15000];    
-static float log_fdat_02[15000];
+static float log_fdat_02[15000];  
+static float log_fdat_03[15000];
 #endif
 
 //*****************************************************************************
@@ -180,10 +181,11 @@ static void log_dat( ){
   log_dat_00[log_cnt]  = gColorParts->linevalue;
   log_dat_01[log_cnt]  = gGyroParts->GetGyroPartsData();
   log_dat_02[log_cnt]  = gGyroParts->gyro_250d[0];
-  log_dat_03[log_cnt]  = gController->forward;
-  log_fdat_00[log_cnt] = gMotorParts->velocity;
-  log_fdat_01[log_cnt] = gMotorParts->yawrate;
-  log_fdat_02[log_cnt] = gMotorParts->abs_angle;
+  log_dat_03[log_cnt]  = gController->gCruiseCtrl->mForward;
+  log_fdat_00[log_cnt] = gController->gCruiseCtrl->offset;;
+  log_fdat_01[log_cnt] = gController->gCruiseCtrl->mYawratecmd;
+  log_fdat_02[log_cnt] = gController->gCruiseCtrl->mYawrate;  
+  log_fdat_03[log_cnt] = gController->gCruiseCtrl->mTurn;  
 
   log_cnt++;
   if (log_cnt == log_size){
@@ -192,21 +194,16 @@ static void log_dat( ){
 }
 
 //*****************************************************************************
-// 関数名 : 
-// 引数 : 
-// 返り値 : 
-// 概要 : 
-//*****************************************************************************
 static void export_log_dat( ){
     FILE* file_id;
     int battery = ev3_battery_voltage_mV();
     file_id = fopen( "log_dat.csv" ,"w");
     fprintf(file_id, "battery:%d\n",battery);
-    fprintf(file_id, "cnt,linevalue,gyro,gyro2,log_right_pwm,mTurn,mYawratecmd,mYawrate\n");
+    fprintf(file_id, "cnt,linevalue,gyro,gyro2,offset,mYawratecmd,mYawrate,mTurn\n");
     int cnt;
 
-    for(cnt = 0; cnt < log_size ; cnt++){
-      fprintf(file_id, "%d,%d,%d,%d,%d,%f,%f,%f\n",cnt, log_dat_00[cnt],log_dat_01[cnt], log_dat_02[cnt],log_dat_03[cnt],log_fdat_00[cnt],log_fdat_01[cnt], log_fdat_02[cnt]);
+    for(cnt = 0; cnt < log_cnt ; cnt++){
+      fprintf(file_id, "%d,%d,%d,%d,%f,%f,%f,%f\n",cnt, log_dat_00[cnt],log_dat_01[cnt], log_dat_02[cnt],log_fdat_00[cnt],log_fdat_01[cnt], log_fdat_02[cnt],log_fdat_03[cnt]);
     }
     fclose(file_id);
 }
@@ -233,7 +230,7 @@ void eye_task(intptr_t exinf) {
 
 #ifdef LOG_RECORD
   log_dat();
-  if (gTouchParts->GetTouchPartsData()){
+  if (gTouchParts->GetTouchPartsIsTouch()){
     wup_tsk(MAIN_TASK);
   }
 #endif
@@ -251,8 +248,17 @@ void eye_task(intptr_t exinf) {
     gSonarParts->SonarPartsTask();
 #endif
     gTouchParts->TouchPartsTask();
-
+#if 0
+    char r_char[256];
+    char l_char[256];
+    sprintf(r_char, "R_PWM:%6ld", gMotorParts->getMotorPartsPwm(MOTORPARTS_RIGHT_NO));
+    ev3_lcd_draw_string(r_char,0, 20);
+    sprintf(l_char, "L_PWM:%6ld", gMotorParts->getMotorPartsPwm(MOTORPARTS_LEFT_NO));
+    ev3_lcd_draw_string(l_char,0, 40);
+#else
     gController->ControllerOperation();
+#endif
+    
   }
   ext_tsk();
 }
@@ -277,7 +283,7 @@ void robo_cyc(intptr_t exinf) {
 void robo_task(intptr_t exinf) {
 
 #ifdef LOG_RECORD  
-if (gTouchParts->GetTouchPartsData()){
+if (gTouchParts->GetTouchPartsIsTouch()){
   wup_tsk(MAIN_TASK);
 }
 #endif
