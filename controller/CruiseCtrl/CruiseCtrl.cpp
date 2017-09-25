@@ -56,6 +56,45 @@ CruiseCtrl::~CruiseCtrl(){
 // 関数名 : 
 // 引数 : unused
 // 返り値 : なし
+// 概要 : バランス走行に必要なものをリセットする
+//*****************************************************************************
+void CruiseCtrl::init() {
+	offset = mGyroParts->GetGyroPartsData();  // ジャイロセンサ値
+    
+  robo_Clock       = new Clock();        
+
+  mMotorParts->MotorPartsReset(MOTORPARTS_LEFT_BIT&MOTORPARTS_RIGHT_BIT);
+  
+  mBalancer->init(offset);
+  balance_mode = true; 
+  lug_mode     = false;
+
+  Tail_Mode = Ang_Balance;
+
+  Stand_Mode = Balance_Mode;
+}
+
+//*****************************************************************************
+// 関数名 : 
+// 引数 :  @param forward 前進値
+//         @param turn    旋回値
+// 返り値 : なし
+// 概要 : PWM値を設定する
+//*****************************************************************************
+void CruiseCtrl::setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode) {
+		
+	mForward         = forward;
+	mYawratecmd      = yawratecmd;
+	mTail_ang_req    = tail_ang_req;
+	mYawrate         = yawrate;
+	mTail_stand_mode = tail_stand_mode;
+	mTail_lug_mode   = tail_lug_mode;
+}
+
+//*****************************************************************************
+// 関数名 : 
+// 引数 : unused
+// 返り値 : なし
 // 概要 : バランス走行する
 //*****************************************************************************
 void CruiseCtrl::CruiseCtrlOperation() {
@@ -65,24 +104,19 @@ void CruiseCtrl::CruiseCtrlOperation() {
   
 	//アクティブヨーレート();
 	mTurn = YawrateController(mYawrate, mYawratecmd);
-	
-	if(mTailModeFlag == true){
+
+	if(mTail_stand_mode == true){
 		tail_stand_from_balance();
-	}else if((mTailModeFlag == false) && (Stand_Mode != Balance_Mode)){
+	  }else if((mTail_stand_mode == false) && (Stand_Mode != Balance_Mode)){
 		if(Stand_Mode == Tail_Stand){
 			Stand_Mode = Stand_Vert;
 		}
 		tail_stand_from_balance();
 	}else{
-		mMotorParts->tail_control(mAngleCommand);
+		mMotorParts->tail_control(mTail_ang_req);
 		balance_off_en = false;
 	}
   
-
-#ifdef DEBUG_LINETRACE_BALANCER
-	mBalancer->setCommand(mForward, mYawratecmd);
-#endif
-
 	int battery = ev3_battery_voltage_mV();
 	if((Stand_Mode == Stand_to_Balance)&&(log_left_pwm < -10)){
 		mBalancer->setCommand(mForward, mTurn);
@@ -104,7 +138,12 @@ void CruiseCtrl::CruiseCtrlOperation() {
 	log_left_pwm        = mBalancer->getPwmLeft();
 	log_right_pwm       = mBalancer->getPwmRight();
 
-    if((balance_off_en == true) && (mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) >  70)){
+    if( ((balance_off_en == true) && (mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) >  70)) || (Stand_Mode == Lug_to_Stand) ){
+		TailMode(mForward, mTurn);
+		mMotorParts->setMotorPartsLeftRight(mtail_mode_pwm_r,mtail_mode_pwm_l);
+		balance_mode = false; 
+		//    }else if((mTail_lug_mode == true) && (balance_off_en == true) && (balance_mode = false) ){
+	  }else if(mTail_lug_mode == true){
 		TailMode(mForward, mTurn);
 		mMotorParts->setMotorPartsLeftRight(mtail_mode_pwm_r,mtail_mode_pwm_l);
 		balance_mode = false; 
@@ -113,55 +152,7 @@ void CruiseCtrl::CruiseCtrlOperation() {
 		balance_mode = true;
 
 	}
-
-#ifdef DEBUG_LINETRACE
-	mMotorParts->setMotorPartsLeftRight(mForward+mYawratecmd,mForward-mYawratecmd);
-#endif
-
-#ifdef DEBUG_STOP
-	mMotorParts->setMotorPartsLeftRight(0,0);
-#endif
   }
-
-//*****************************************************************************
-// 関数名 : 
-// 引数 : unused
-// 返り値 : なし
-// 概要 : バランス走行に必要なものをリセットする
-//*****************************************************************************
-void CruiseCtrl::init() {
-	offset = mGyroParts->GetGyroPartsData();  // ジャイロセンサ値
-	
-	robo_Clock       = new Clock();
-	// モータエンコーダをリセットする
-	mMotorParts->MotorPartsReset(MOTORPARTS_LEFT_BIT&MOTORPARTS_RIGHT_BIT);
-	
-	// 倒立振子制御初期化
-	mBalancer->init(offset);
-	balance_mode = true;
-
-
-	Stand_Mode = Balance_Mode;
-}
-
-//*****************************************************************************
-// 関数名 : 
-// 引数 :  @param forward 前進値
-//         @param turn    旋回値
-// 返り値 : なし
-// 概要 : PWM値を設定する
-//*****************************************************************************
-void CruiseCtrl::setCommand(int forward, float yawratecmd, signed int anglecommand, float yawrate, bool tail_mode_lflag) {
-    mForward      = forward;
-    mYawratecmd   = yawratecmd;
-    mAngleCommand = anglecommand;
-    mYawrate      = yawrate;
-    mTailModeFlag = tail_mode_lflag;
-    mmForward     = mForward;
-    mmTurn        = mYawratecmd;
-    mmYawratecmd  = mAngleCommand;//目標Yawrate
-    mmYawrate     = mYawrate;
-}
 
 //*****************************************************************************
 // 関数名 : 
@@ -221,15 +212,59 @@ void CruiseCtrl::tail_stand_from_balance(){
 	  break;
   
 	case Tail_Stand:
+    //tail_control(TAIL_ANGLE_DANSA);
+    lug_mode     = false;
 	  if((robo_Clock->now() - clock_start) < 500){
 		mForward = 0;
 		mTurn = 0;
 		balance_off_en = true;
 	  }else{
-  
-		//mForward = 0;
-		//mTurn    = 0;
 		balance_off_en = true;
+	  }
+  
+  
+	  if(mTail_lug_mode == true){
+		balance_off_en = true;
+		Stand_Mode = Tail_Lug;
+	  }
+	  break;
+  
+	case Tail_Lug:
+  
+    if(mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) <= TAIL_ANGLE_LUG){
+		clock_start = robo_Clock->now();
+		mMotorParts->tail_control(TAIL_ANGLE_LUG);
+		mMotorParts->BrakeMotorPartsTail(true);
+		lug_mode     = true;
+	  }else{
+		target_tail_angle = target_tail_angle - 0.05;
+		mMotorParts->tail_control(target_tail_angle);
+	  }
+  
+	  if(mTail_lug_mode == false){
+		Stand_Mode = Lug_to_Stand;
+		mMotorParts->BrakeMotorPartsTail(false);
+	  }
+  
+	  break;
+  
+	case Lug_to_Stand:
+	  balance_off_en = true;
+	  mTurn = 0;
+  
+	  if(mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) < 75){
+		mForward = -100;
+		mMotorParts->setMotorPartsTailPwm(100);
+	  }else{
+		mForward = 0;
+		mMotorParts->tail_control(TAIL_ANGLE_DANSA);
+		target_tail_angle = TAIL_ANGLE_DANSA;
+		if(mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) >= TAIL_ANGLE_DANSA){
+	  mMotorParts->BrakeMotorPartsTail(true);
+	  mMotorParts->setMotorPartsTailPwm(0);
+	  Stand_Mode = Tail_Stand;
+	  clock_start = robo_Clock->now();
+		}
 	  }
 	  break;
   
@@ -237,6 +272,7 @@ void CruiseCtrl::tail_stand_from_balance(){
 	  mForward = 0;
 	  mTurn    = 0;
 	  balance_off_en = true;
+	  mMotorParts->BrakeMotorPartsTail(false);
 	  if(mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) >= 95){
 		mMotorParts->tail_control(96);
 		clock_start = robo_Clock->now();

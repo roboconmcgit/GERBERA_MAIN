@@ -64,21 +64,20 @@ private:
     int   mLinevalue_LUG;
     float mXvalue;    //x座標
     float mYvalue;    //y座標
-    float mOdo;       //Total distance [mm] from start point
     float mSpeed;     //速度
-    float mYawrate;   //ヨーレート
-    float mYawangle;  //ヨー角
     int   mTail_angle;
-    //signals for robo movement
-    bool  mRobo_stop       = 0;
-    bool  mRobo_forward    = 0;
-    bool  mRobo_back       = 0;
-    bool  mRobo_turn_left  = 0;
-    bool  mRobo_turn_right = 0;
     bool  mDansa;      //段差検出値
     bool  mDet_gray;      //段差検出値
     bool  mGarage = false;
-    int32_t mSonar;
+    int16_t mSonar_dis;
+
+	bool  left_line_edge = true;
+	float anglecommand;    //尻尾角度
+    bool  tail_stand_mode;
+    bool  tail_lug_mode;
+
+    int SysModeNum;
+    int   Mmode;
 
 //protected:
 public:
@@ -87,17 +86,22 @@ public:
 
     Balancer    *gBalancer;
 
-    Sys_Mode mSys_Mode;
-
-    int SysModeNum;
-    int   Mmode;
-    bool  mRobo_balance_mode;
-
-	bool  left_line_edge = true;
 	int   forward;         //前進目標値
 	float yawratecmd;      //目標ヨーレート
-	float anglecommand;    //尻尾角度
-    bool  tail_mode_lflag; //倒立走行フラグ
+    Sys_Mode mSys_Mode;
+    bool  mRobo_balance_mode;
+    bool    mRobo_lug_mode;
+    
+    float mOdo;       //Total distance [mm] from start point
+    float mYawrate;   //ヨーレート
+    float mYawangle;  //ヨー角
+
+    //signals for robo movement
+    bool  mRobo_stop       = 0;
+    bool  mRobo_forward    = 0;
+    bool  mRobo_back       = 0;
+    bool  mRobo_turn_left  = 0;
+    bool  mRobo_turn_right = 0;
     
     enum enumTrack_Mode{
         Start_to_1st_Straight,

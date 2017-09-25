@@ -30,13 +30,8 @@
 MotorParts::MotorParts():
 	leftMotor(LEFT_MOTOR_CH),
 	rightMotor(RIGHT_MOTOR_CH),
-	tailMotor(TAIL_MOTOR_CH),
-	angle2_e(0),   /* angle2用変数型宣言 */
-	angle2_eo1(0), /* angle2用変数型宣言 */
-	angle2_eo2(0), /* angle2用変数型宣言 */
-	pwm_o(0),      /* angle2用変数型宣言 */
-	pwm2(0),
-	pwm(0)
+  tailMotor(TAIL_MOTOR_CH),
+  tail_motor_pwm(0)
 {
 	//memset((void *)&MotorParts_Calib, 0, sizeof(MOTORPARTS_CALIBRA));
 	memset((void *)&MotorParts_State, 0, MOTORPARTS_NUM);
@@ -147,6 +142,26 @@ void MotorParts::stopMotorPartsLeftRight(void){
 }
 
 //*****************************************************************************
+// 関数名 : stopMotorPartsLeftRight
+// 引数 : unused
+// 返り値 : なし
+// 概要 : 左右モータを止める
+//*****************************************************************************
+void MotorParts::BrakeMotorPartsTail(bool IsBreak){
+  tailMotor.setBrake(IsBreak);
+}
+
+//*****************************************************************************
+// 関数名 : stopMotorPartsLeftRight
+// 引数 : unused
+// 返り値 : なし
+// 概要 : 左右モータを止める
+//*****************************************************************************
+void MotorParts::setMotorPartsTailPwm(int TailMotorPwm){
+  tailMotor.setPWM(TailMotorPwm);
+}
+
+//*****************************************************************************
 // 関数名 : setMotorPartsTail
 // 引数 : int8_t tailMove
 // 返り値 : なし
@@ -192,20 +207,20 @@ void MotorParts::setMotorPartsTail(int8_t tailMove){
 //*****************************************************************************
 void MotorParts::tail_control(signed int angle)
 {
-  //  pwm = (float)(angle - tailMotor.getCount()*P_GAIN); /* 比例制御 */
-  pwm = gTail_pwm->calc_pid(angle, tailMotor.getCount());
-  pwm = pwm*0.1;
+  //  tail_motor_pwm = (float)(angle - mTail_Motor.getCount()*P_GAIN); /* 比例制御 */
+  tail_motor_pwm = gTail_pwm->calc_pid(angle, tailMotor.getCount());
+  tail_motor_pwm = tail_motor_pwm*0.1;
   /* PWM出力飽和処理 */
-  if (pwm > PWM_ABS_MAX)
+  if (tail_motor_pwm > PWM_ABS_MAX)
     {
-      pwm = PWM_ABS_MAX;
+      tail_motor_pwm = PWM_ABS_MAX;
     }
-  else if (pwm < -PWM_ABS_MAX)
+  else if (tail_motor_pwm < -PWM_ABS_MAX)
     {
-      pwm = -PWM_ABS_MAX;
+      tail_motor_pwm = -PWM_ABS_MAX;
     }
 
-  if (pwm == 0)
+  if (tail_motor_pwm == 0)
     {
       //17.07.28 kota modify//        ev3_motor_stop(tail_motor, true);
       tailMotor.stop();
@@ -213,12 +228,8 @@ void MotorParts::tail_control(signed int angle)
   else
     {
       //17.07.28 kota modify//        ev3_motor_set_power(tail_motor, (signed char)pwm);
-      tailMotor.setPWM((signed int)pwm);
+      tailMotor.setPWM((signed int)tail_motor_pwm);
     }
-  angle2_eo1 = 0.0;
-  angle2_eo2 = 0.0;
-  pwm_o = pwm; /* angle2用変数型初期化 */
-
 }
 
 //170816 ota add tail control
@@ -297,12 +308,13 @@ void MotorParts::WheelOdometry(float dT) {
   velocity       = Clpfd * velocity_prev + Dlpfd * velocity_input;
   velocity_prev  = Alpfd * velocity_prev + Blpfd * velocity_input;
   
-  xvalue = xvalue+(-1)*(odo-odo_prev)*sin(relative_angle);
-  yvalue = yvalue+(odo-odo_prev)*cos(relative_angle);    
-
   relative_angle =  ((float)WheelAngRdeg - (float)WheelAngLdeg) * RAD_1_DEG * WHEEL_R / RoboTread; //ロボのYaw角[rad]
   relative_angle = relative_angle + correction_angle;
-  abs_angle      = relative_angle + RAD_90_DEG + correction_angle;
+
+  abs_angle      = relative_angle * 1.0 + RAD_90_DEG + correction_angle;
+  xvalue = xvalue+(odo-odo_prev)*cos(abs_angle); //0902 tada
+  yvalue = yvalue+(odo-odo_prev)*sin(abs_angle); //0902 tada
+
 #ifdef DEBUG_NANSYO
   abs_angle      = relative_angle;
 #endif
@@ -326,8 +338,8 @@ void MotorParts::WheelOdometry(float dT) {
     }else if(odo > 1500 && odo <= 1505){
       angle_ave_dat = angle_sum_dat/cap_cnt;
       correction_angle = RAD_90_DEG - angle_ave_dat;
-      xvalue = 0.0;
-      yvalue = 1505;
+    	xvalue = 327.19;
+    	yvalue = 415.74 + odo * sin(angle_ave_dat);//0910 tada
 
       enum_Mode = DET_MOVEMENT;
       angle_sum_dat = 0;

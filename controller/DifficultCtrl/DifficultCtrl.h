@@ -56,29 +56,34 @@ private:
     enumStep_Mode   Step_Mode;
 
     enum enumLUG_Mode{
-	  LUG_Start,
-	  Approach_to_LUG,
-      LUG_Tail_On,
-	  LUG_Tailangle,
-	  LUG_Stop0,
-	  LUG_forward,
-	  LUG_Stop1,
-	  LUG_Trun1,
-	  LUG_Stop2,
-	  LUG_forward2,
-	  LUG_Stop3,
-	  LUG_Trun2,
-	  LUG_Stop4,
-	  LUG_forward3,
-	  LUG_Stop5,
-	  LUG_Stand_Up,
-	  LUG_Stop6,
-	  Garage_Turn,
-	  Garage_Stop0,
-	  END,
-    };
+        LUG_Start,
+  
+        Approach_to_LUG,
+        Tail_On_1st,
+        POS_ADJ_1st,
+        LUG_Mode_1st,
+        LUG_1st,
+        Pre_1st_Turn,
+        Turn_1st,
+  
+        Approach_to_2nd_LUG,
+        LUG_Mode_2nd,
+        LUG_2nd,
+        Pre_2nd_Turn,
+        Turn_2nd,
+  
+        Approach_to_3rd_LUG,
+        LUG_Mode_3rd,
+        LUG_3rd,
+  
+        Tail_Stand_Up,
+  
+        LUG_Debug_00
+      };
 
     enumLUG_Mode LUG_Mode;
+
+    PID *gForward = new PID();
 
 public:    
     DifficultCtrl(CruiseCtrl* Cruise);     //コンストラクタ
@@ -98,7 +103,7 @@ public:
         int &forward,
         float &yawratecmd,
         float &anglecommand,
-        bool &tail_mode_lflag,
+        bool &tail_stand_mode,
         float &ref_x,
         float mXvalue
     );//段差走行
@@ -111,14 +116,17 @@ public:
         int &forward,
         float &yawratecmd,
         float &anglecommand,
-        bool &tail_mode_lflag
+        bool &tail_stand_mode,
+        bool &tail_lug_mode,
+        bool mRobo_lug_mode,
+        int16_t mSonar_dis
     );
     int GarageRunner(int line_value_lug, float mOdo, float angle,int line_value);                                 //ガレージ走行
     int StopRobo(
         int &forward,
         float &yawratecmd,
         float &anglecommand,
-        bool &tail_mode_lflag
+        bool &tail_stand_mode
     );                                     //ロボット停止
     
 };

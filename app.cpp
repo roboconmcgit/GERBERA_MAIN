@@ -178,14 +178,14 @@ static void sys_destroy(){
 #ifdef LOG_RECORD
 static void log_dat( ){
 
-  log_dat_00[log_cnt]  = gColorParts->linevalue;
-  log_dat_01[log_cnt]  = gGyroParts->GetGyroPartsData();
-  log_dat_02[log_cnt]  = gGyroParts->gyro_250d[0];
-  log_dat_03[log_cnt]  = gController->gCruiseCtrl->mForward;
-  log_fdat_00[log_cnt] = gController->gCruiseCtrl->offset;;
-  log_fdat_01[log_cnt] = gController->gCruiseCtrl->mYawratecmd;
-  log_fdat_02[log_cnt] = gController->gCruiseCtrl->mYawrate;  
-  log_fdat_03[log_cnt] = gController->gCruiseCtrl->mTurn;  
+  log_dat_00[log_cnt]  = gController->Track_Mode;
+  log_dat_01[log_cnt]  = gController->mRobo_forward;
+  log_dat_02[log_cnt]  = gController->mRobo_balance_mode;
+  log_dat_03[log_cnt]  = gController->forward;
+  log_fdat_00[log_cnt] = gController->yawratecmd;;
+  log_fdat_01[log_cnt] = gController->mYawangle;
+  log_fdat_02[log_cnt] = gController->yawratecmd;  
+  log_fdat_03[log_cnt] = gController->yawratecmd;  
 
   log_cnt++;
   if (log_cnt == log_size){
@@ -199,11 +199,11 @@ static void export_log_dat( ){
     int battery = ev3_battery_voltage_mV();
     file_id = fopen( "log_dat.csv" ,"w");
     fprintf(file_id, "battery:%d\n",battery);
-    fprintf(file_id, "cnt,linevalue,gyro,gyro2,offset,mYawratecmd,mYawrate,mTurn\n");
+    fprintf(file_id, "cnt,Track_Mode,mRobo_forward,mRobo_balance_mode,forward,yawratecmd,mYawangle,yawratecmd,yawratecmdmTurn\n");
     int cnt;
 
     for(cnt = 0; cnt < log_cnt ; cnt++){
-      fprintf(file_id, "%d,%d,%d,%d,%f,%f,%f,%f\n",cnt, log_dat_00[cnt],log_dat_01[cnt], log_dat_02[cnt],log_fdat_00[cnt],log_fdat_01[cnt], log_fdat_02[cnt],log_fdat_03[cnt]);
+      fprintf(file_id, "%d,%d,%d,%d,%d,%f,%f,%f,%f\n",cnt, log_dat_00[cnt],log_dat_01[cnt], log_dat_02[cnt], log_dat_03[cnt],log_fdat_00[cnt],log_fdat_01[cnt], log_fdat_02[cnt],log_fdat_03[cnt]);
     }
     fclose(file_id);
 }

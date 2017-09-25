@@ -42,6 +42,8 @@ private:
         Tail_Down,
         Tail_On,
         Tail_Stand,
+        Tail_Lug,
+        Lug_to_Stand,
         Stand_Vert,
         Stand_to_Balance,
         Tail_for_Run,
@@ -125,9 +127,13 @@ private:
     deque<float> dsave_log10;
 #endif
 
+    signed int mTail_ang_req;
 
     int mtail_mode_pwm_l;
     int mtail_mode_pwm_r;
+    
+    bool  mTail_stand_mode;
+    bool  mTail_lug_mode;
 
     // LineTracerYawrate
     float y_t=0;
@@ -142,10 +148,7 @@ public:
 
     int  offset;
     bool balance_mode;
-    int   mmForward;
-    int   mmTurn;
-    float mmYawratecmd;//目標Yawrate
-    float mmYawrate;
+    bool  lug_mode;
 
     float mYawratecmd;//目標Yawrate
     float mYawrate;
@@ -163,6 +166,18 @@ public:
     int   log_left_pwm;
     int   log_right_pwm;
 
+    enum enumTail_Mode{
+        Ang_Balance,
+        Ang_Tail_Down,
+        Ang_Tail_On,
+        Ang_Tail_Stand,
+        Ang_Stand_Vert,
+        Ang_Stand_to_Balance,
+        Ang_Tail_for_Run,
+        Ang_Debug_00
+      };
+      enumTail_Mode  Tail_Mode;
+
     // LineTracerYawrate
     float pg = 0.35;//暫定0.9 //0818 tada
     float df = 0.024;//暫定-0.1 //0818 tada
@@ -172,8 +187,8 @@ public:
            Balancer* balancer);            //コンストラクタ
     ~CruiseCtrl();                                 //デストラクタ
     void init();
+    void setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode);
     void CruiseCtrlOperation();
-    void setCommand(int forward, float yawratecmd, signed int anglecommand, float yawrate, bool tail_mode_lflag);//0816
     
     void tail_stand_from_balance();
     void exportRobo(char *csv_header);

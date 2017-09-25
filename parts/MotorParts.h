@@ -72,18 +72,16 @@ private:
 
     // Tail control
     PID *gTail_pwm = new PID();
-    float angle2_e;   /* angle2用変数型宣言 */
-    float angle2_eo1; /* angle2用変数型宣言 */
-    float angle2_eo2; /* angle2用変数型宣言 */
-    float pwm_o;      /* angle2用変数型宣言 */
-    float pwm2;
-    float pwm;
 
 public:
     // WheelOdometry用
+#ifdef RIGHT_MODE
+    float xvalue    = 327.19;//x座標推定値
+    float yvalue    = 415.74;//y座標推定値
+#else
     float xvalue    = 735.96;//x座標推定値
     float yvalue    = 415.74;//y座標推定値
-
+#endif
     float odo       = 0.0;//odometry
     float velocity  = 0.0;//Velocity
 
@@ -103,6 +101,8 @@ public:
         DET_MOVEMENT,
       };
       Ang_Eye_Mode enum_Mode;
+
+    float      tail_motor_pwm;
       
     MotorParts();                       //コンストラクタ
     ~MotorParts();                      //デストラクタ
@@ -116,6 +116,10 @@ public:
                                         //左右モータを動かす
     void stopMotorPartsLeftRight(void);
                                         //左右モータを止める
+    void BrakeMotorPartsTail(bool IsBreak);
+
+    void setMotorPartsTailPwm(int TailMotorPwm);
+
     void setMotorPartsTail(int8_t tailMove);
                                         //テールモータを動かす
     void  WheelOdometry(float dT);

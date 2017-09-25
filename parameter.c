@@ -2,7 +2,7 @@
 int TAIL_ANGLE_STAND_UP = 98; /* 完全停止時の角度[度]     */
 int TAIL_ANGLE_RUN      =  3; /* バランス走行時の角度[度] */
 int TAIL_ANGLE_DANSA    = 85; /* 完全停止時の角度[度]     */
-int TAIL_ANGLE_LUG      = 75; /* 3点移動時の角度[度]      */
+int TAIL_ANGLE_LUG      = 65; /* 3点移動時の角度[度]      */
 int TAIL_ANGLE_GARAGE   = 94; /* 完全停止時の角度[度]     */
 
 int INITIAL_WHITE_THRESHOLD = 40;  // 黒色の光センサ値
@@ -48,14 +48,38 @@ int   STEP_CLIMB_SPPED      = 15;
 float GARAGE_X_POS          = 1000;
 float GARAGE_LENGTH         =  150;
 
+
+//LUG
+float APPROACH_TO_LUG_LENGTH = 900;
+//float STOP_POS_FROM_LUG      = 5;
+float STOP_POS_FROM_LUG      = 10;
+
+float APPROACH_TO_1st_LUG    = 150;
+float APPROACH_TO_2nd_LUG    = 150;
+float APPROACH_TO_3rd_LUG    = 150;
+
+
+float LUG_1st_STOP           = 150;
+//float LUG_1st_STOP           = 200;
+float LUG_2nd_STOP           = 150;
+//float LUG_3rd_STOP           = 150;
+float LUG_3rd_STOP           = 200;
+
+//Parameter of Garage
+float STEP_TO_GARAGE_LENGTH = 1100;
+float LUG_TO_GARAGE_LENGTH  =  650;
+
+//Garage
 int   SONAR_DIST            = 75;
 int   GARAGE_LIT_DIST       = 48;
 float GRAY_TO_GARAGE_LENGTH =  200;
-float STEP_TO_GARAGE_LENGTH = 11100;
+//float STEP_TO_GARAGE_LENGTH = 11100;
 
 #ifdef RIGHT_MODE
 //Parameter of Course
 float FINAL_STRAIGHT_LENGTH = 1900;
+// Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line 
+float CORNER_CHECK[5]={1.0, -2.0, 0.5, 1.0, 2.5};
 
 //Parameter of Area
 float LineTrace1Area[4]={0, 0, 0, 0};
@@ -94,6 +118,8 @@ float Gate89Area[4]={0, 0, 0, 0};
 
 #else
 float FINAL_STRAIGHT_LENGTH = 1100.0;
+// Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line 
+float CORNER_CHECK[5]={1.0, -2.0, 2.0, 1.0, 1.5};
 
 //x_left, x_right, y_under, y_top
 /*ライン（攻）
