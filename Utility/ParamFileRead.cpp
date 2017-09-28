@@ -7,9 +7,9 @@ int ParamFileRead::setParameters(void){
     //intデータ
     //GetFileData_int("XXXXX", &XXXXX);
 
+#if 0
     GetFileData_int("SONAR_DIST", &SONAR_DIST);
     GetFileData_int("GARAGE_LIT_DIST", &GARAGE_LIT_DIST);
-#if 0
     GetFileData_int("SONAR_ALERT_LOOKUPGATE", &SONAR_ALERT_LOOKUPGATE);
 
     GetFileData_int("TAIL_ANGLE_STAND_UP", &TAIL_ANGLE_STAND_UP);

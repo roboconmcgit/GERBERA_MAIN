@@ -9,7 +9,9 @@
 #include "parameter.h"
 #include "app.h"
 #include "CruiseCtrl.h"
-#include "DifficultCtrl.h"
+#include "LookUpGate.h"
+#include "StepRun.h"
+
 #include "Brain_Calc_Library.h"
 #include "Clock.h"
 
@@ -82,7 +84,8 @@ private:
 //protected:
 public:
     CruiseCtrl  *gCruiseCtrl;
-    DifficultCtrl *gDifficultCtrl;
+    StepRun *gStepRun;
+    LookUpGate *gLookUpGate;
 
     Balancer    *gBalancer;
 

@@ -230,6 +230,7 @@ void CruiseCtrl::tail_stand_from_balance(){
 	  break;
   
 	case Tail_Lug:
+    balance_off_en = true;
   
     if(mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) <= TAIL_ANGLE_LUG){
 		clock_start = robo_Clock->now();
@@ -437,82 +438,6 @@ void CruiseCtrl::TailMode(int mForward, float mTurn){
 	mtail_mode_pwm_l = 0.5*mForward + 1.0*mTurn ;
 	mtail_mode_pwm_r = 0.5*mForward - 1.0*mTurn;
 }
-
-//*****************************************************************************
-// 関数名 : 
-// 引数 : unused
-// 返り値 : なし
-// 概要 : 
-//*****************************************************************************
-void CruiseCtrl::saveData(int idata_num){
-#ifdef DEBUG_ROBO
-
-	dsave_log1.push_front(0);
-	dsave_log2.push_front(0);
-	dsave_log3.push_front(0);
-	dsave_log4.push_front(0);
-	dsave_log5.push_front(0);
-	dsave_log6.push_front(0);
-	dsave_log7.push_front(0);
-	dsave_log8.push_front(0);
-	dsave_log9.push_front(0);
-	dsave_log10.push_front(0);
-
-    int current_size = (int)dsave_log1.size();
-
-    if(current_size > idata_num){
-    	dsave_log1.pop_front();
-    	dsave_log2.pop_front();
-    	dsave_log3.pop_front();
-    	dsave_log4.pop_front();
-    	dsave_log5.pop_front();
-    	dsave_log6.pop_front();
-    	dsave_log7.pop_front();
-    	dsave_log8.pop_front();
-    	dsave_log9.pop_front();
-    	dsave_log10.pop_front();
-    }
-#endif
-
-}
-
-//*****************************************************************************
-// 関数名 : 
-// 引数 : unused
-// 返り値 : なし
-// 概要 : 
-//*****************************************************************************
-void CruiseCtrl::exportRobo(char *csv_header){
-
-#ifdef DEBUG_ROBO
-
-    FILE* file_id;
-    char csv_file_name[100];
-    char csv_file_name_tmp[] = "Robo_Data.csv";
-    sprintf(csv_file_name, "%s_%s", csv_header, csv_file_name_tmp);
-    file_id = fopen( csv_file_name ,"w");
-
-    fprintf(file_id, "log1, log2, log3, log4, log5, log6, log7, log8, log9, log10  \n");
-
-    int cnt_max = (int)dsave_log1.size()-1;
-    int cnt;
-    int cnt2;
-    //
-    for(cnt2 = 0; cnt2 <= cnt_max ; cnt2++){
-        cnt = cnt_max - cnt2;
-
-        //fprintf(file_id, "%f, %f, %f, %f, %f, %f, %f  \n", dsave_cpu_time[cnt], dsave_data_target[cnt], dsave_data_measured[cnt], dsave_diff_for_kp[cnt], dsave_diff_for_ki[cnt],dsave_diff_for_kd[cnt], dsave_res_pid[cnt]);
-        fprintf(file_id, "%f, %f, %f, %f, %f, %f, %f, %f, %f, %f  \n",
-        		dsave_log1[cnt], dsave_log2[cnt], dsave_log3[cnt], dsave_log4[cnt],
-				dsave_log5[cnt], dsave_log6[cnt], dsave_log7[cnt], dsave_log8[cnt], dsave_log9[cnt], dsave_log10[cnt]);
-    }
-
-
-    fclose(file_id);
-#endif
-
-}
-
 
 //*****************************************************************************
 // 関数名 : 

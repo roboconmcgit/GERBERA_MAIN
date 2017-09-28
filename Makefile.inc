@@ -17,7 +17,8 @@ APPL_CXXOBJS += \
 	SonarParts.o \
 	TouchParts.o \
 	CruiseCtrl.o \
-	DifficultCtrl.o \
+	LookUpGate.o \
+	StepRun.o \
 	Controller.o \
 #	lcdDraw.o \
 #	logging.o \

@@ -114,19 +114,6 @@ private:
     bool balance_off_en;
     bool pre_balancer_on;
     
-#ifdef DEBUG_ROBO
-    dequefloat> dsave_log1;
-    deque<float> dsave_log2;
-    deque<float> dsave_log3;
-    deque<float> dsave_log4;
-    deque<float> dsave_log5;
-    deque<float> dsave_log6;
-    deque<float> dsave_log7;
-    deque<float> dsave_log8;
-    deque<float> dsave_log9;
-    deque<float> dsave_log10;
-#endif
-
     signed int mTail_ang_req;
 
     int mtail_mode_pwm_l;
