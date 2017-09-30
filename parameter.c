@@ -66,6 +66,8 @@ int   STBL_CNT_2nd_DANSA_ON   = 400;
 float APPROACH_TO_LUG_LENGTH = 900;
 //float STOP_POS_FROM_LUG      = 5;
 float STOP_POS_FROM_LUG      = 10;
+//float STOP_POS_FROM_LUG      = 25;
+float STOP_POS_APP_LUG      = 5;
 
 float APPROACH_TO_1st_LUG    = 150;
 float APPROACH_TO_2nd_LUG    = 150;
@@ -73,10 +75,12 @@ float APPROACH_TO_3rd_LUG    = 150;
 
 
 float LUG_1st_STOP           = 150;
+//float LUG_1st_STOP           = 250;
 //float LUG_1st_STOP           = 200;
 float LUG_2nd_STOP           = 150;
+//float LUG_2nd_STOP           = 250;
 //float LUG_3rd_STOP           = 150;
-float LUG_3rd_STOP           = 200;
+float LUG_3rd_STOP           = 200;//200;
 
 //Parameter of Garage
 float STEP_TO_GARAGE_LENGTH = 1100;

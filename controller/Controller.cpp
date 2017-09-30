@@ -210,7 +210,7 @@ void Controller::Track_run() {
 			anglecommand = TAIL_ANGLE_RUN; //0817 tada
 			tail_stand_mode = false;
 			if(mOdo > ref_odo){
-				Track_Mode = Dead_Zone;
+				Track_Mode = Safety_Zone;//Dead_Zone;
 				ref_odo = mOdo + DEAD_ZONE_LENGTH;
 			}
 			break;
@@ -245,6 +245,16 @@ void Controller::Track_run() {
 			}
 			break;
 
+		case Safety_Zone:
+			forward =  30;
+			yawratecmd = gCruiseCtrl->LineTracerYawrate((2*mLinevalue), 1.0, -1.0);
+			anglecommand = TAIL_ANGLE_RUN; //0817 tada
+			tail_stand_mode = false;
+
+			if(mOdo > ref_odo){
+				Track_Mode = Return_to_Line;
+			}
+			break;
 		case Return_to_Line:
 			forward =  20; // 0910 tada
 			if(mYawangle < 0.16 && mLinevalue <20){

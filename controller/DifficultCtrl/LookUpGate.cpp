@@ -84,7 +84,7 @@
      static float ref_forward;
      static float y_t;
      static float ref_odo;
-   
+
      switch(LUG_Mode){
    
      case LUG_Start:
@@ -139,12 +139,22 @@
          tail_stand_mode = true;
          tail_lug_mode  = false;
        }else{
-         forward         = 0;
-         yawratecmd      = 0;
-         tail_stand_mode = true;
-         tail_lug_mode   = false;
-         LUG_Mode        = LUG_Mode_1st;
+          forward         = 0;
+          yawratecmd      = 0;
+          tail_stand_mode = true;
+          tail_lug_mode   = false;
+          LUG_Mode        = LUG_Mode_1st;
        }
+       
+#if 1
+       if(mSonar_dis <= STOP_POS_APP_LUG){
+        forward         = 0;
+        yawratecmd      = 0;
+        tail_stand_mode = true;
+        tail_lug_mode   = false;
+        LUG_Mode        = LUG_Mode_1st;
+       }
+#endif
        break;
      case LUG_Mode_1st:
        forward      = 0;
@@ -215,6 +225,16 @@
          tail_lug_mode   = false;
          LUG_Mode        = LUG_Mode_2nd;
        }
+
+#if 1
+       if(mSonar_dis <= STOP_POS_APP_LUG){
+        forward         = 0;
+        yawratecmd      = 0;
+        tail_stand_mode = true;
+        tail_lug_mode   = false;
+        LUG_Mode        = LUG_Mode_2nd;
+       }
+#endif
        break;
    
      case LUG_Mode_2nd:
@@ -289,6 +309,16 @@
          tail_lug_mode   = false;
          LUG_Mode        = LUG_Mode_3rd;
        }
+
+#if 1
+       if(mSonar_dis <= STOP_POS_APP_LUG){
+        forward         = 0;
+        yawratecmd      = 0;
+        tail_stand_mode = true;
+        tail_lug_mode   = false;
+        LUG_Mode        = LUG_Mode_3rd;
+       }
+#endif
        break;
    
      case LUG_Mode_3rd:

@@ -116,6 +116,7 @@ public:
         Final_Straight,  //5
         Get_Ref_Odo,  //6
         Dead_Zone,  //7
+        Safety_Zone,
         Return_to_Line,  //8
         Go_Step,  //9
         Approach_to_Garage, //10

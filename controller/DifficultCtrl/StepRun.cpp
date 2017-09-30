@@ -126,15 +126,15 @@
    
        if(dansa){
          Step_Mode   = First_Dansa;
-      ref_odo  = odo + FST_DANSA_POS;
+          ref_odo  = odo + FST_DANSA_POS;
          clock_start = gClock->now();
          dansa_cnt   = 0;
-      stable_cnt = 0;
-      gForward->init_pid(0.1,0.01,0.001,dT_4ms);
+          stable_cnt = 0;
+          gForward->init_pid(0.1,0.01,0.001,dT_4ms);
          ref_x       = mXvalue; //reference x pos for Garage
    
    #ifdef STEP_DEBUG
-      ref_x       =mYvalue; //it is for debug which start from return to line mode
+          ref_x       =mYvalue; //it is for debug which start from return to line mode
    #endif
        }
        break;
