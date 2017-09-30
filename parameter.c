@@ -1,3 +1,5 @@
+#include "parameter.h"
+
 //Parameter of Robo
 int TAIL_ANGLE_STAND_UP = 98; /* 完全停止時の角度[度]     */
 int TAIL_ANGLE_RUN      =  3; /* バランス走行時の角度[度] */
@@ -89,7 +91,7 @@ float GRAY_TO_GARAGE_LENGTH =  200;
 //Parameter of Course
 float FINAL_STRAIGHT_LENGTH = 1900;
 // Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line 
-float CORNER_CHECK[5]={1.0, -2.0, 2.0, 1.0, 2.5};
+float CORNER_CHECK[5]={1.0, -2.0, 1.0, 1.0, 2.5};
 
 #else
 float FINAL_STRAIGHT_LENGTH = 1100.0;

@@ -155,7 +155,6 @@ void Controller::Track_run() {
 	int dammy_line_value;
 #ifdef RIGHT_MODE
 #else
-	int speedcal = 0;
 	static float   ref_angle;
 #endif
 	float y_t;
@@ -167,7 +166,7 @@ void Controller::Track_run() {
 			yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, 1.5, -1.5);
 			anglecommand = TAIL_ANGLE_RUN; //0817 tada
 			tail_stand_mode = false;
-		
+			
 			if(mYawangle < CORNER_CHECK[0]){
 				Track_Mode = Start_to_1st_Corner;
 			}
@@ -367,22 +366,6 @@ void Controller::Track_run() {
 			anglecommand = TAIL_ANGLE_RUN; //0817 tada
 			tail_stand_mode = false;
 #else
-			yawratecmd = 0.0;
-			if(mGarage == false){
-				if(mSonar_dis > SONAR_DIST){
-				mGarage = true;
-				ref_odo = mOdo - GARAGE_LIT_DIST;
-				}
-				speedcal = -20;
-			}else{
-				if(mOdo <= ref_odo){
-				Track_Mode = Garage_In;
-				}
-				speedcal =  -10;
-			}
-			forward =  speedcal;
-			Max_Yawrate = 1.0;
-			Min_Yawrate = -1.0;
 #endif
 			break;
 		case Garage_Tail_On:

@@ -61,7 +61,7 @@ static void log_dat( ){
 
   log_dat_00[log_cnt]  = gController->Track_Mode;
   log_dat_01[log_cnt]  = gController->mRobo_forward;
-  log_dat_02[log_cnt]  = gController->mRobo_balance_mode;
+  log_dat_02[log_cnt]  = gController->mSonar_dis;
   log_dat_03[log_cnt]  = gController->forward;
   log_fdat_00[log_cnt] = gController->yawratecmd;;
   log_fdat_01[log_cnt] = gController->mYawangle;

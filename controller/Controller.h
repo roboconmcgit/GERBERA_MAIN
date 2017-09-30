@@ -71,7 +71,6 @@ private:
     bool  mDansa;      //段差検出値
     bool  mDet_gray;      //段差検出値
     bool  mGarage = false;
-    int16_t mSonar_dis;
 
 	bool  left_line_edge = true;
 	float anglecommand;    //尻尾角度
@@ -99,6 +98,8 @@ public:
     float mYawrate;   //ヨーレート
     float mYawangle;  //ヨー角
 
+    int16_t mSonar_dis;
+
     //signals for robo movement
     bool  mRobo_stop       = 0;
     bool  mRobo_forward    = 0;
@@ -107,24 +108,24 @@ public:
     bool  mRobo_turn_right = 0;
     
     enum enumTrack_Mode{
-        Start_to_1st_Straight,
-        Start_to_1st_Corner,
-        Fst_Corner,
-        Snd_Corner,
-        Final_Corner,
-        Final_Straight,
-        Get_Ref_Odo,
-        Dead_Zone,
-        Return_to_Line,
-        Go_Step,
-        Approach_to_Garage,
-        Go_to_Garage,
-        Garage_Tail_On,
-        Return_to_Line_Garage,
-        Garage_In,
-        Garage_Stop,
-        Stop_Robo,
-        Go_LUG,
+        Start_to_1st_Straight, //0
+        Start_to_1st_Corner,  //1
+        Fst_Corner,  //2
+        Snd_Corner,  //3
+        Final_Corner,  //4
+        Final_Straight,  //5
+        Get_Ref_Odo,  //6
+        Dead_Zone,  //7
+        Return_to_Line,  //8
+        Go_Step,  //9
+        Approach_to_Garage, //10
+        Go_to_Garage,  //11
+        Garage_Tail_On, //12
+        Return_to_Line_Garage, //13
+        Garage_In,  //14
+        Garage_Stop,  //15
+        Stop_Robo,  //16
+        Go_LUG,  //17
         Track_Debug_00,
         Track_Debug_01,
         Track_Debug_02
