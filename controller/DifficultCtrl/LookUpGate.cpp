@@ -28,7 +28,6 @@
  LookUpGate::LookUpGate(CruiseCtrl* Cruise)
  :gCruiseCtrl(Cruise)
  {
- 
  }
  
  //*****************************************************************************
@@ -94,7 +93,6 @@
        LUG_Mode      = Approach_to_LUG;
        ref_forward   = 0.0;
        ref_odo       = odo +  APPROACH_TO_LUG_LENGTH;
-       gForward->init_pid(0.05,0.01,0.001,dT_4ms);
        break;
    
      case Approach_to_LUG:
@@ -148,8 +146,6 @@
          LUG_Mode        = LUG_Mode_1st;
        }
        break;
-   
-   
      case LUG_Mode_1st:
        forward      = 0;
        ref_forward  = 0.0;
@@ -159,7 +155,6 @@
        if(mRobo_lug_mode == true){
          ref_odo       = odo + LUG_1st_STOP;
          LUG_Mode      = LUG_1st;
-   
        }
        break;
    

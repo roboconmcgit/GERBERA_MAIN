@@ -5,7 +5,7 @@ extern "C" {
 #include "ev3api.h"
 #include "parameter.h"
 
-#define ROBO_PRIORITY    TMIN_APP_TPRI + 3
+#define ROBO_PRIORITY    TMIN_APP_TPRI + 2
 #define MAIN_PRIORITY    TMIN_APP_TPRI + 4
 #define EYE_PRIORITY     TMIN_APP_TPRI + 1
 //#define BRAIN_PRIORITY   TMIN_APP_TPRI + 2

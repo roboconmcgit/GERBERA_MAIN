@@ -47,7 +47,8 @@ MotorParts::MotorParts():
 		robo_turn_right = 0;
 		
 		// Tail Control
-    gTail_pwm->init_pid(0.1, 0.01, 0.01, dT_4ms);
+    //gTail_pwm.init_pid(0.1, 0.01, 0.01, dT_4ms);
+    gTail_pwm->init_pid(0, 0, 0, 1); //it would be chanbed bellow 
 		
 }
 

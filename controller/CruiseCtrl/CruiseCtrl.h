@@ -37,20 +37,6 @@ private:
     MotorParts* mMotorParts;
     Balancer* mBalancer;
 
-    enum enumStand_Mode{
-        Balance_Mode,
-        Tail_Down,
-        Tail_On,
-        Tail_Stand,
-        Tail_Lug,
-        Lug_to_Stand,
-        Stand_Vert,
-        Stand_to_Balance,
-        Tail_for_Run,
-        Debug_00
-      };
-      enumStand_Mode  Stand_Mode;
-
    
     signed int mAngleCommand;
     //17.07.28 kota copy from 3-apex
@@ -111,16 +97,12 @@ private:
 
     void TailMode(int mForward, float mTurn); //PWM Gen. without Balancer task 0814
 
-    bool balance_off_en;
     bool pre_balancer_on;
     
-    signed int mTail_ang_req;
 
     int mtail_mode_pwm_l;
     int mtail_mode_pwm_r;
     
-    bool  mTail_stand_mode;
-    bool  mTail_lug_mode;
 
     // LineTracerYawrate
     float y_t=0;
@@ -131,7 +113,23 @@ public:
     static const int NORMAL;
     static const int HIGH;
 
+    bool balance_off_en;
+    
     Clock*       robo_Clock;
+
+    enum enumStand_Mode{
+        Balance_Mode,
+        Tail_Down,
+        Tail_On,
+        Tail_Stand,
+        Tail_Lug,
+        Lug_to_Stand,
+        Stand_Vert,
+        Stand_to_Balance,
+        Tail_for_Run,
+        Debug_00
+      };
+      enumStand_Mode  Stand_Mode;
 
     int  offset;
     bool balance_mode;
@@ -141,6 +139,11 @@ public:
     float mYawrate;
     int   mForward;
     float mTurn;
+
+    signed int mTail_ang_req;
+
+    bool  mTail_stand_mode;
+    bool  mTail_lug_mode;
 
     bool mTailModeFlag;//0816
     

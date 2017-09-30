@@ -75,7 +75,7 @@ Controller::~Controller(){
 // 概要 : 
 //*****************************************************************************
 void Controller::ControllerInit(){
-	Track_Mode = Start_to_1st_Straight;//Start_to_1st_Corner;
+	Track_Mode = Start_to_1st_Straight;
 #if 0
 Track_Mode = Go_LUG;
 #endif
@@ -278,17 +278,17 @@ void Controller::Track_run() {
 
 		case Go_Step:
 			if(gStepRun->StepRunner(mLinevalue, 
-																		mOdo, 
-																		mYawangle, 
-																		mDansa,
-																		mRobo_balance_mode,
-																		forward,
-																		yawratecmd,
-																		anglecommand,
-																		tail_stand_mode,
-																		ref_x,
-																		mXvalue)){
-			
+									mOdo, 
+									mYawangle, 
+									mDansa,
+									mRobo_balance_mode,
+									forward,
+									yawratecmd,
+									anglecommand,
+									tail_stand_mode,
+									ref_x,
+									mXvalue)){
+
 				Track_Mode = Approach_to_Garage;
 			}
 			ref_odo = mOdo + STEP_TO_GARAGE_LENGTH;
@@ -299,17 +299,17 @@ void Controller::Track_run() {
 			yawratecmd = gCruiseCtrl->LineTracerYawrate((2*mLinevalue), 1.5, -1.5);
 
 			if(gLookUpGate->LookUpGateRunner(mLinevalue_LUG,
-													mOdo, 
-													mYawangle,
-													mLinevalue,
-													mRobo_balance_mode,
-													forward,
-													yawratecmd,
-													anglecommand,
-													tail_stand_mode,
-													tail_lug_mode,
-													mRobo_lug_mode,
-													mSonar_dis)){
+											mOdo, 
+											mYawangle,
+											mLinevalue,
+											mRobo_balance_mode,
+											forward,
+											yawratecmd,
+											anglecommand,
+											tail_stand_mode,
+											tail_lug_mode,
+											mRobo_lug_mode,
+											mSonar_dis)){
 				Track_Mode = Approach_to_Garage;//Return_to_Line_Garage;
 			}
 			break;

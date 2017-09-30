@@ -20,39 +20,38 @@
  private:
  
      CruiseCtrl  *gCruiseCtrl;
-  
-     enum enumLUG_Mode{
-         LUG_Start,
-   
-         Approach_to_LUG,
-         Tail_On_1st,
-         POS_ADJ_1st,
-         LUG_Mode_1st,
-         LUG_1st,
-         Pre_1st_Turn,
-         Turn_1st,
-   
-         Approach_to_2nd_LUG,
-         LUG_Mode_2nd,
-         LUG_2nd,
-         Pre_2nd_Turn,
-         Turn_2nd,
-   
-         Approach_to_3rd_LUG,
-         LUG_Mode_3rd,
-         LUG_3rd,
-   
-         Tail_Stand_Up,
-   
-         LUG_Debug_00
-       };
- 
-     enumLUG_Mode LUG_Mode;
- 
-     PID *gForward = new PID();
      float LineTracerYawrate(int line_value);
  
  public:    
+
+    enum enumLUG_Mode{
+        LUG_Start,
+  
+        Approach_to_LUG,
+        Tail_On_1st,
+        POS_ADJ_1st,
+        LUG_Mode_1st,
+        LUG_1st,
+        Pre_1st_Turn,
+        Turn_1st,
+  
+        Approach_to_2nd_LUG,
+        LUG_Mode_2nd,
+        LUG_2nd,
+        Pre_2nd_Turn,
+        Turn_2nd,
+  
+        Approach_to_3rd_LUG,
+        LUG_Mode_3rd,
+        LUG_3rd,
+  
+        Tail_Stand_Up,
+  
+        LUG_Debug_00
+      };
+
+    enumLUG_Mode LUG_Mode;
+
      LookUpGate(CruiseCtrl* Cruise);     //コンストラクタ
      ~LookUpGate();                      //デストラクタ
  

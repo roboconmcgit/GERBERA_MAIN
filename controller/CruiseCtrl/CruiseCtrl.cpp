@@ -107,7 +107,7 @@ void CruiseCtrl::CruiseCtrlOperation() {
 
 	if(mTail_stand_mode == true){
 		tail_stand_from_balance();
-	  }else if((mTail_stand_mode == false) && (Stand_Mode != Balance_Mode)){
+	}else if((mTail_stand_mode == false) && (Stand_Mode != Balance_Mode)){
 		if(Stand_Mode == Tail_Stand){
 			Stand_Mode = Stand_Vert;
 		}
@@ -178,36 +178,36 @@ void CruiseCtrl::tail_stand_from_balance(){
 	  mForward = 0;
 	  mTurn = 0;
 	  if(target_tail_angle <= TAIL_ANGLE_DANSA){
-		target_tail_angle = target_tail_angle + 0.5;
+			target_tail_angle = target_tail_angle + 0.5;
 	  }
 	  if(mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) >= TAIL_ANGLE_DANSA){
-		Stand_Mode = Tail_On;
-		clock_start = robo_Clock->now();
+			Stand_Mode = Tail_On;
+			clock_start = robo_Clock->now();
 	  }
 	  mMotorParts->tail_control(target_tail_angle);
 	  balance_off_en = false;
 	  break;
-  
+
 	case Tail_On:
 	  mForward = 0;
 	  mTurn = 0;
 	  //    if((robo_Clock->now() - clock_start) < 5000){
 	  if((robo_Clock->now() - clock_start) < 3500){
-		mForward = 0;
-		mTurn = 0;
-		balance_off_en = false;
+			mForward = 0;
+			mTurn = 0;
+			balance_off_en = false;
 	  }
 	  //    else if((robo_Clock->now() - clock_start) > 7000){
 	  else if((robo_Clock->now() - clock_start) > 5000){
-		mForward = 0;
-		mTurn = 0;
-		balance_off_en = true;
-		Stand_Mode = Tail_Stand;
-		clock_start = robo_Clock->now();
+			mForward = 0;
+			mTurn = 0;
+			balance_off_en = true;
+			Stand_Mode = Tail_Stand;
+			clock_start = robo_Clock->now();
 	  }else{
-		mForward = -20;
-		mTurn = 0;
-		balance_off_en = false;
+			mForward = -20;
+			mTurn = 0;
+			balance_off_en = false;
 	  }
 	  break;
   
@@ -215,17 +215,17 @@ void CruiseCtrl::tail_stand_from_balance(){
     //tail_control(TAIL_ANGLE_DANSA);
     lug_mode     = false;
 	  if((robo_Clock->now() - clock_start) < 500){
-		mForward = 0;
-		mTurn = 0;
-		balance_off_en = true;
+			mForward = 0;
+			mTurn = 0;
+			balance_off_en = true;
 	  }else{
-		balance_off_en = true;
+			balance_off_en = true;
 	  }
   
   
 	  if(mTail_lug_mode == true){
-		balance_off_en = true;
-		Stand_Mode = Tail_Lug;
+			balance_off_en = true;
+			Stand_Mode = Tail_Lug;
 	  }
 	  break;
   
@@ -233,18 +233,18 @@ void CruiseCtrl::tail_stand_from_balance(){
     balance_off_en = true;
   
     if(mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) <= TAIL_ANGLE_LUG){
-		clock_start = robo_Clock->now();
-		mMotorParts->tail_control(TAIL_ANGLE_LUG);
-		mMotorParts->BrakeMotorPartsTail(true);
-		lug_mode     = true;
+			clock_start = robo_Clock->now();
+			mMotorParts->tail_control(TAIL_ANGLE_LUG);
+			mMotorParts->BrakeMotorPartsTail(true);
+			lug_mode     = true;
 	  }else{
 		target_tail_angle = target_tail_angle - 0.05;
-		mMotorParts->tail_control(target_tail_angle);
+			mMotorParts->tail_control(target_tail_angle);
 	  }
   
 	  if(mTail_lug_mode == false){
-		Stand_Mode = Lug_to_Stand;
-		mMotorParts->BrakeMotorPartsTail(false);
+			Stand_Mode = Lug_to_Stand;
+			mMotorParts->BrakeMotorPartsTail(false);
 	  }
   
 	  break;

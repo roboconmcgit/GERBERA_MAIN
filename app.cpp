@@ -59,14 +59,14 @@ static float log_fdat_03[15000];
 #ifdef LOG_RECORD
 static void log_dat( ){
 
-  log_dat_00[log_cnt]  = gController->Track_Mode;
-  log_dat_01[log_cnt]  = gController->mRobo_forward;
-  log_dat_02[log_cnt]  = gController->mSonar_dis;
-  log_dat_03[log_cnt]  = gController->forward;
-  log_fdat_00[log_cnt] = gController->yawratecmd;;
-  log_fdat_01[log_cnt] = gController->mYawangle;
-  log_fdat_02[log_cnt] = gController->yawratecmd;  
-  log_fdat_03[log_cnt] = gController->yawratecmd;  
+  log_dat_00[log_cnt]  = gController->gLookUpGate->LUG_Mode;
+  log_dat_01[log_cnt]  = gController->gCruiseCtrl->mTail_lug_mode;
+  log_dat_02[log_cnt]  = gController->gCruiseCtrl->mTail_ang_req;
+  log_dat_03[log_cnt]  = gController->gCruiseCtrl->Stand_Mode;
+  log_fdat_00[log_cnt] = gController->gCruiseCtrl->balance_off_en;
+  log_fdat_01[log_cnt] = gController->gCruiseCtrl->mTail_ang_req;
+  log_fdat_02[log_cnt] = gMotorParts->tail_motor_pwm;  
+  log_fdat_03[log_cnt] = gMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO);  
 
   log_cnt++;
   if (log_cnt == log_size){
@@ -80,7 +80,8 @@ static void export_log_dat( ){
     int battery = ev3_battery_voltage_mV();
     file_id = fopen( "log_dat.csv" ,"w");
     fprintf(file_id, "battery:%d\n",battery);
-    fprintf(file_id, "cnt,Track_Mode,mRobo_forward,mRobo_balance_mode,forward,yawratecmd,mYawangle,yawratecmd,yawratecmdmTurn\n");
+  log_fdat_00[log_cnt] = gController->gCruiseCtrl->mYawratecmd;;
+    fprintf(file_id, "cnt,LUG_Mode,mTail_lug_mode,mTail_ang_req,Stand_Mode,mYawratecmd,lug_mode,tail_motor_pwm,getMotorPartsPwm\n");
     int cnt;
 
     for(cnt = 0; cnt < log_cnt ; cnt++){
