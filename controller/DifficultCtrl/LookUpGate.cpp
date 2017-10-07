@@ -143,7 +143,7 @@
           LUG_Mode        = LUG_Mode_1st;
        }
        
-#if 1
+#if 0
        if(mSonar_dis <= STOP_POS_APP_LUG){
         forward         = 0;
         yawratecmd      = 0;
@@ -177,7 +177,13 @@
        yawratecmd = y_t;
    
        if(odo > ref_odo){
-         LUG_Mode    = Pre_1st_Turn;
+         //LUG_Mode    = Pre_1st_Turn;
+
+#if 1
+         if(mSonar_dis == 255){
+          LUG_Mode    = Pre_1st_Turn;
+         }
+  #endif
        }
        break;
        
@@ -223,7 +229,7 @@
          LUG_Mode        = LUG_Mode_2nd;
        }
 
-#if 1
+#if 0
        if(mSonar_dis <= STOP_POS_APP_LUG){
         forward         = 0;
         yawratecmd      = 0;
@@ -259,7 +265,13 @@
        yawratecmd = y_t;
    
        if(odo > ref_odo){
-         LUG_Mode    = Pre_2nd_Turn;
+         //LUG_Mode    = Pre_2nd_Turn;
+
+#if 1
+         if(mSonar_dis == 255){
+          LUG_Mode    = Pre_2nd_Turn;
+         }
+#endif
        }
        break;
    
@@ -307,7 +319,7 @@
          LUG_Mode        = LUG_Mode_3rd;
        }
 
-#if 1
+#if 0
        if(mSonar_dis <= STOP_POS_APP_LUG){
         forward         = 0;
         yawratecmd      = 0;
@@ -341,7 +353,13 @@
        yawratecmd = y_t;
    
        if(odo > ref_odo){
-         LUG_Mode    = Tail_Stand_Up;
+         //LUG_Mode    = Tail_Stand_Up;
+         
+#if 1
+        if(mSonar_dis == 255){
+        LUG_Mode    = Tail_Stand_Up;
+        }
+#endif
        }
        break;
    

@@ -69,6 +69,7 @@ extern float MINUS_RAD_30_DEG; //
 
 extern float RAD_90_DEG;
 extern float RAD_120_DEG;
+extern float RAD_150_DEG;
 extern float RAD_315_DEG;
 extern float RAD_345_DEG;
 extern float RAD_360_DEG;
@@ -103,6 +104,11 @@ extern float APPROACH_TO_3rd_LUG;
 extern float LUG_1st_STOP;
 extern float LUG_2nd_STOP;
 extern float LUG_3rd_STOP;
+
+extern float LUG_YAW_GAIN;
+extern int   LUG_COL_VAL_OFFSET;
+extern int   LUG_COL_VAL_GAIN;
+extern float LUG_GRAY_TO_GARAGE;
 
 //Parameter of Garage
 extern float STEP_TO_GARAGE_LENGTH;

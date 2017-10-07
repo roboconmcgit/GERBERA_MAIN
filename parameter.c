@@ -34,6 +34,7 @@ float MINUS_RAD_30_DEG = -0.5236; //
 
 float RAD_90_DEG  = 1.5708; //
 float RAD_120_DEG = 2.0944; //
+float RAD_150_DEG = 2.6180; //
 float RAD_315_DEG = 5.4978; //
 float RAD_345_DEG = 6.0214; //
 float RAD_360_DEG = 6.2832; //
@@ -65,22 +66,28 @@ int   STBL_CNT_2nd_DANSA_ON   = 400;
 //LUG
 float APPROACH_TO_LUG_LENGTH = 900;
 //float STOP_POS_FROM_LUG      = 5;
-float STOP_POS_FROM_LUG      = 10;
+float STOP_POS_FROM_LUG      = 20;
 //float STOP_POS_FROM_LUG      = 25;
-float STOP_POS_APP_LUG      = 5;
+float STOP_POS_APP_LUG      = 7;
 
 float APPROACH_TO_1st_LUG    = 150;
 float APPROACH_TO_2nd_LUG    = 150;
 float APPROACH_TO_3rd_LUG    = 150;
 
-
-float LUG_1st_STOP           = 150;
+//float LUG_1st_STOP           = 150;
 //float LUG_1st_STOP           = 250;
-//float LUG_1st_STOP           = 200;
-float LUG_2nd_STOP           = 150;
+float LUG_1st_STOP           = 200;
+//float LUG_2nd_STOP           = 150;
 //float LUG_2nd_STOP           = 250;
+float LUG_2nd_STOP           = 200;
 //float LUG_3rd_STOP           = 150;
-float LUG_3rd_STOP           = 200;//200;
+//float LUG_3rd_STOP           = 200;
+float LUG_3rd_STOP           = 250;
+
+float LUG_YAW_GAIN           = 2.0;
+int   LUG_COL_VAL_OFFSET     = 60;
+int   LUG_COL_VAL_GAIN       = 2;
+float LUG_GRAY_TO_GARAGE     = 400;
 
 //Parameter of Garage
 float STEP_TO_GARAGE_LENGTH = 1100;
@@ -104,4 +111,5 @@ float CORNER_CHECK[5]={1.0, -2.0, 2.0, 1.0, 1.0};
 
 #endif
 
-int SONAR_TIME = 50;
+int SONAR_TIME = 25;
+

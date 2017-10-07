@@ -247,7 +247,7 @@ void Controller::Track_run() {
 
 		case Safety_Zone:
 			forward =  30;
-			yawratecmd = gCruiseCtrl->LineTracerYawrate((2*mLinevalue), 1.0, -1.0);
+			yawratecmd = gCruiseCtrl->LineTracerYawrate((2*mLinevalue), 3.0, -3.0);
 			anglecommand = TAIL_ANGLE_RUN; //0817 tada
 			tail_stand_mode = false;
 

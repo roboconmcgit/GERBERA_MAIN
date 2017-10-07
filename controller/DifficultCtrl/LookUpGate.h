@@ -26,7 +26,7 @@
 
     enum enumLUG_Mode{
         LUG_Start,
-  
+        //1
         Approach_to_LUG,
         Tail_On_1st,
         POS_ADJ_1st,
@@ -34,7 +34,7 @@
         LUG_1st,
         Pre_1st_Turn,
         Turn_1st,
-  
+        //8
         Approach_to_2nd_LUG,
         LUG_Mode_2nd,
         LUG_2nd,

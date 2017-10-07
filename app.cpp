@@ -61,9 +61,9 @@ static void log_dat( ){
 
   log_dat_00[log_cnt]  = gController->gLookUpGate->LUG_Mode;
   log_dat_01[log_cnt]  = gController->mSonar_dis;
-  log_dat_02[log_cnt]  = gController->gLookUpGate->ref_odo;
-  log_dat_03[log_cnt]  = 0;
-  log_fdat_00[log_cnt] = 0;
+  log_dat_02[log_cnt]  = 0;
+  log_dat_03[log_cnt]  = gController->Track_Mode;
+  log_fdat_00[log_cnt] = gController->yawratecmd;
   log_fdat_01[log_cnt] = 0;
   log_fdat_02[log_cnt] = 0;  
   log_fdat_03[log_cnt] = 0;  
