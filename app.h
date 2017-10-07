@@ -26,7 +26,7 @@ extern "C" {
 #define CALIB_FONT        (EV3_FONT_MEDIUM)
 #define CALIB_FONT_WIDTH  (6/*TODO: magic number*/)
 #define CALIB_FONT_HEIGHT (20/*TODO: magic number*/)
-#define LOG_RECORD
+//#define LOG_RECORD
 #ifdef LOG_RECORD
 #define BT_LOG
 #endif

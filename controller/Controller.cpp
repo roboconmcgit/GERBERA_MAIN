@@ -247,7 +247,7 @@ void Controller::Track_run() {
 
 		case Safety_Zone:
 			forward =  30;
-			yawratecmd = gCruiseCtrl->LineTracerYawrate((2*mLinevalue), 3.0, -3.0);
+			yawratecmd = gCruiseCtrl->LineTracerYawrate((3*mLinevalue), 1.5, -1.5);
 			anglecommand = TAIL_ANGLE_RUN; //0817 tada
 			tail_stand_mode = false;
 
@@ -256,7 +256,8 @@ void Controller::Track_run() {
 			}
 			break;
 		case Return_to_Line:
-			forward =  20; // 0910 tada
+			forward =  50; // 0910 tada
+#if 0
 			if(mYawangle < 0.16 && mLinevalue <20){
 				dammy_line_value = 50 - 300*(mYawangle-0.1);
 				if(dammy_line_value > 100){
@@ -269,13 +270,15 @@ void Controller::Track_run() {
 			else{
 				yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, 5.0, -5.0);
 			}
+#endif
+			yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, 5.0, -5.0);
 			anglecommand = TAIL_ANGLE_RUN;
 			tail_stand_mode = false;
 		
 #ifdef RIGHT_MODE
 			if((mYawangle > CORNER_CHECK[4]) &&(mRobo_forward == 1)){
-			  forward =  30;
-			  yawratecmd = gCruiseCtrl->LineTracerYawrate((2*mLinevalue), 5.0, -5.0);
+			  //forward =  30;
+			  //yawratecmd = gCruiseCtrl->LineTracerYawrate((2*mLinevalue), 5.0, -5.0);
 			  Track_Mode = Go_LUG;
 			  ref_odo    = mOdo + APPROACH_TO_LUG_LENGTH;
 			}
@@ -328,7 +331,7 @@ void Controller::Track_run() {
 #ifdef RIGHT_MODE
 			tail_stand_mode = true;
 			ref_odo = mOdo + LUG_TO_GARAGE_LENGTH;
-			y_t = -0.5*(PAI - mYawangle)-0.2;
+			y_t = -0.5*(PAI - mYawangle + GARAGE_OFFSET_ANGLE);
 			yawratecmd = y_t;
 		
 			gStep->SetInitPIDGain(0.1,0.005,0.05,dT_4ms);

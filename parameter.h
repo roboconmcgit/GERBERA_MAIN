@@ -13,7 +13,7 @@ extern "C" {
 #endif
 */
 
-#define RIGHT_MODE
+//#define RIGHT_MODE
 
 //#define LEFT_MODE
 
@@ -94,8 +94,8 @@ extern int   STBL_CNT_2nd_DANSA_ON;
 
 //LUG
 extern float APPROACH_TO_LUG_LENGTH;
-extern float STOP_POS_FROM_LUG;
-extern float STOP_POS_APP_LUG;
+extern int STOP_POS_FROM_LUG;
+extern int STOP_POS_APP_LUG;
 
 extern float APPROACH_TO_1st_LUG;
 extern float APPROACH_TO_2nd_LUG;
@@ -118,6 +118,8 @@ extern float GARAGE_LENGTH;
 
 extern int   SONAR_DIST;
 extern int   GARAGE_LIT_DIST;
+
+extern float GARAGE_OFFSET_ANGLE;
 
 extern int Approach_to_LUG_time;
 extern int LUG_Tail_On_time;

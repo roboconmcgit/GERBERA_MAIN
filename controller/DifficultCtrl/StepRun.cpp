@@ -120,7 +120,7 @@
        }
    
        yawratecmd = LineTracerYawrate((CL_SNSR_GAIN_GRAY*line_value));
-       if((angle >  RAD_90_DEG)&&(yawratecmd < 0) ){
+       if((angle >  RAD_90_DEG-0.2)&&(yawratecmd < 0) ){
          yawratecmd = 0.0;
        }
    

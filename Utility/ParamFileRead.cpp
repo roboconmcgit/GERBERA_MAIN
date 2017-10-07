@@ -6,45 +6,22 @@
 int ParamFileRead::setParameters(void){
     //intデータ
     //GetFileData_int("XXXXX", &XXXXX);
-
-#if 0
-    GetFileData_int("SONAR_DIST", &SONAR_DIST);
-    GetFileData_int("GARAGE_LIT_DIST", &GARAGE_LIT_DIST);
-    GetFileData_int("SONAR_ALERT_LOOKUPGATE", &SONAR_ALERT_LOOKUPGATE);
-
     GetFileData_int("TAIL_ANGLE_STAND_UP", &TAIL_ANGLE_STAND_UP);
-    GetFileData_int("TAIL_ANGLE_RUN", &TAIL_ANGLE_RUN);
     GetFileData_int("TAIL_ANGLE_DANSA", &TAIL_ANGLE_DANSA);
     GetFileData_int("TAIL_ANGLE_LUG", &TAIL_ANGLE_LUG);
     GetFileData_int("TAIL_ANGLE_GARAGE", &TAIL_ANGLE_GARAGE);
-    GetFileData_int("RoboTread", &RoboTread);
-#endif
+    GetFileData_int("STOP_POS_FROM_LUG", &STOP_POS_FROM_LUG);
+    GetFileData_int("STOP_POS_APP_LUG", &STOP_POS_APP_LUG);
+
     //floatデータ
-#if 0
     //GetFileData_float("XXXXX", &XXXXX);
-    GetFileData_float("FINAL_STRAIGHT_LENGTH", &FINAL_STRAIGHT_LENGTH);
-    GetFileData_float("DEAD_ZONE_LENGTH", &DEAD_ZONE_LENGTH);
-    GetFileData_float("STEP_TO_GARAGE_LENGTH", &STEP_TO_GARAGE_LENGTH);
-    GetFileData_float("LOOKUPGATE_CORNER_LENGTH", &LOOKUPGATE_CORNER_LENGTH);
-    GetFileData_float("dT_100ms", &dT_100ms);
-    GetFileData_float("dT_4ms", &dT_4ms);
-    GetFileData_float("PAI", &PAI);
-    GetFileData_float("RAD_1_DEG", &RAD_1_DEG);
-    GetFileData_float("RAD_5_DEG", &RAD_5_DEG);
-    GetFileData_float("RAD_15_DEG", &RAD_15_DEG);
-    GetFileData_float("RAD_30_DEG", &RAD_30_DEG);
-    GetFileData_float("MINUS_RAD_5_DEG", &MINUS_RAD_5_DEG);
-    GetFileData_float("MINUS_RAD_15_DEG", &MINUS_RAD_15_DEG);
-    GetFileData_float("MINUS_RAD_30_DEG", &MINUS_RAD_30_DEG);
-    GetFileData_float("RAD_90_DEG", &RAD_90_DEG);
-    GetFileData_float("RAD_120_DEG", &RAD_120_DEG);
-    GetFileData_float("RAD_315_DEG", &RAD_315_DEG);
-    GetFileData_float("RAD_345_DEG", &RAD_345_DEG);
-    GetFileData_float("RAD_360_DEG", &RAD_360_DEG);
-    GetFileData_float("RAD_450_DEG", &RAD_450_DEG);
-    GetFileData_float("WheelDiameter", &WheelDiameter);
-    GetFileData_float("WHEEL_R", &WHEEL_R);
-#endif
+    GetFileData_float("APPROACH_TO_1st_LUG", &APPROACH_TO_1st_LUG);
+    GetFileData_float("APPROACH_TO_2nd_LUG", &APPROACH_TO_2nd_LUG);
+    GetFileData_float("APPROACH_TO_3rd_LUG", &APPROACH_TO_3rd_LUG);
+    GetFileData_float("LUG_1st_STOP", &LUG_1st_STOP);
+    GetFileData_float("LUG_2nd_STOP", &LUG_2nd_STOP);
+    GetFileData_float("LUG_3rd_STOP", &LUG_3rd_STOP);
+    GetFileData_float("GARAGE_OFFSET_ANGLE", &GARAGE_OFFSET_ANGLE);
     return 0;
 }
 
