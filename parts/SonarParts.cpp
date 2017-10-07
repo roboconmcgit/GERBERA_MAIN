@@ -74,7 +74,7 @@ void SonarParts::SonarPartsReset(){
 //*****************************************************************************
 void SonarParts::SonarPartsTask(){
 	//定期的にデータ取得
-    if(sonar_counter%50 == 0){
+    if(sonar_counter%SONAR_TIME == 0){
 		sonarDistance = sonarSensor.getDistance();
 		
 		//Obstacle Check

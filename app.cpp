@@ -60,14 +60,18 @@ static float log_fdat_03[15000];
 static void log_dat( ){
 
   log_dat_00[log_cnt]  = gController->gLookUpGate->LUG_Mode;
-  log_dat_01[log_cnt]  = gController->gCruiseCtrl->mTail_lug_mode;
-  log_dat_02[log_cnt]  = gController->gCruiseCtrl->mTail_ang_req;
-  log_dat_03[log_cnt]  = gController->gCruiseCtrl->Stand_Mode;
-  log_fdat_00[log_cnt] = gController->gCruiseCtrl->balance_off_en;
-  log_fdat_01[log_cnt] = gController->gCruiseCtrl->mTail_ang_req;
-  log_fdat_02[log_cnt] = gMotorParts->tail_motor_pwm;  
-  log_fdat_03[log_cnt] = gMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO);  
-
+  log_dat_01[log_cnt]  = gController->mSonar_dis;
+  log_dat_02[log_cnt]  = gController->gLookUpGate->ref_odo;
+  log_dat_03[log_cnt]  = 0;
+  log_fdat_00[log_cnt] = 0;
+  log_fdat_01[log_cnt] = 0;
+  log_fdat_02[log_cnt] = 0;  
+  log_fdat_03[log_cnt] = 0;  
+#ifdef BT_LOG
+if(bt_cmd == 1){
+  fprintf(bt, "%d,%d,%d,%d,%d,%f,%f,%f,%f\n",log_cnt, log_dat_00[log_cnt],log_dat_01[log_cnt], log_dat_02[log_cnt], log_dat_03[log_cnt],log_fdat_00[log_cnt],log_fdat_01[log_cnt], log_fdat_02[log_cnt],log_fdat_03[log_cnt]);  
+}
+  #endif 
   log_cnt++;
   if (log_cnt == log_size){
     log_cnt  = 0;
@@ -312,24 +316,26 @@ ext_tsk();
 //*****************************************************************************
 void bt_task(intptr_t unused)
 {
+  if(bt_cmd == 0){
     while(1){
       uint8_t c = fgetc(bt); /* 受信 */
       switch(c){
-      case '1':
-	bt_cmd = 1;
-	break;
+        case '1':
+          bt_cmd = 1;
+          break;
 
-      case '0':
-	ev3_speaker_play_tone(NOTE_C4,200);
-	ev3_led_set_color(LED_GREEN);
-	break;
+        case '0':
+          ev3_speaker_play_tone(NOTE_C4,200);
+          ev3_led_set_color(LED_GREEN);
+          break;
 
-      default:
-	ev3_led_set_color(LED_OFF);
-	break;
+        default:
+          ev3_led_set_color(LED_OFF);
+          break;
       }
       fputc(c, bt); /* エコーバック */
     }
+  }
 }
 
 

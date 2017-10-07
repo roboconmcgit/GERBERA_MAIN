@@ -78,8 +78,8 @@ void Controller::ControllerInit(){
 	Track_Mode = Start_to_1st_Straight;
 #if 0
 Track_Mode = Go_LUG;
+mYaw_angle_offset = PAI/2;
 #endif
-  	mYaw_angle_offset = 0.0;
     left_line_edge    = true;
 	gCruiseCtrl->init();
 	gStepRun->init();
@@ -103,8 +103,8 @@ void Controller::ControllerOperation(){
 	mOdo               = gMotorParts->odo;
 	mSpeed             = gMotorParts->velocity;
 	mYawrate           = gMotorParts->yawrate;
-	//mYawangle          = abs_angle + mYaw_angle_offset; 
-	mYawangle          = gMotorParts->abs_angle;
+	mYawangle          = gMotorParts->abs_angle + mYaw_angle_offset; 
+	//mYawangle          = gMotorParts->abs_angle;
 	mTail_angle        = gMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO);
 	mRobo_stop         = gMotorParts->robo_stop;
 	mRobo_forward      = gMotorParts->robo_forward;
@@ -328,7 +328,7 @@ void Controller::Track_run() {
 #ifdef RIGHT_MODE
 			tail_stand_mode = true;
 			ref_odo = mOdo + LUG_TO_GARAGE_LENGTH;
-			y_t = -0.5*(PAI - mYawangle);
+			y_t = -0.5*(PAI - mYawangle)-0.2;
 			yawratecmd = y_t;
 		
 			gStep->SetInitPIDGain(0.1,0.005,0.05,dT_4ms);

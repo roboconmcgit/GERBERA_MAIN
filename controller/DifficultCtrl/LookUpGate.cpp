@@ -81,9 +81,6 @@
      int16_t mSonar_dis
  ){
      int ret = 0;
-     static float ref_forward;
-     static float y_t;
-     static float ref_odo;
 
      switch(LUG_Mode){
    

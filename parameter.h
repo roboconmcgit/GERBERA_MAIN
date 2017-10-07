@@ -13,7 +13,7 @@ extern "C" {
 #endif
 */
 
-//#define RIGHT_MODE
+#define RIGHT_MODE
 
 //#define LEFT_MODE
 
@@ -122,5 +122,7 @@ extern float LineTracer_KI;
 extern float LineTracer_KD;
 
 extern float TURN_PAI;
+
+extern int SONAR_TIME;
 
 #endif // !PRAMETER_H_

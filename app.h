@@ -27,6 +27,9 @@ extern "C" {
 #define CALIB_FONT_WIDTH  (6/*TODO: magic number*/)
 #define CALIB_FONT_HEIGHT (20/*TODO: magic number*/)
 #define LOG_RECORD
+#ifdef LOG_RECORD
+#define BT_LOG
+#endif
 
 extern void main_task(intptr_t exinf);
 extern void bt_task(intptr_t exinf); //17.07.28 k-ota add

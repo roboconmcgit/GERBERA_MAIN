@@ -59,7 +59,7 @@ private:
 
     BrainCalcLibrary *gStep = new BrainCalcLibrary();       //段差走行オブジェクト（脳みそ計算ライブラリ）
     
-    float mYaw_angle_offset;
+    float mYaw_angle_offset = 0.0;
 
     float ref_x;
     int   mLinevalue; //ライン検出値

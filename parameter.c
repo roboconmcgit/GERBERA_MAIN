@@ -104,4 +104,4 @@ float CORNER_CHECK[5]={1.0, -2.0, 2.0, 1.0, 1.0};
 
 #endif
 
-
+int SONAR_TIME = 50;

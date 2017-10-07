@@ -52,6 +52,10 @@
 
     enumLUG_Mode LUG_Mode;
 
+    float ref_forward;
+    float y_t;
+    float ref_odo;
+
      LookUpGate(CruiseCtrl* Cruise);     //コンストラクタ
      ~LookUpGate();                      //デストラクタ
  
