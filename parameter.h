@@ -13,7 +13,7 @@ extern "C" {
 #endif
 */
 
-//#define RIGHT_MODE
+#define RIGHT_MODE
 
 //#define LEFT_MODE
 
@@ -75,6 +75,8 @@ extern float RAD_345_DEG;
 extern float RAD_360_DEG;
 extern float RAD_450_DEG;
 
+extern float RAD_88p5_DEG;
+
 //Parameter of Course
 extern float CORNER_CHECK[];
 extern float FINAL_STRAIGHT_LENGTH;
@@ -109,6 +111,7 @@ extern float LUG_YAW_GAIN;
 extern int   LUG_COL_VAL_OFFSET;
 extern int   LUG_COL_VAL_GAIN;
 extern float LUG_GRAY_TO_GARAGE;
+extern float LUG_GARAGE_OFFSET;
 
 //Parameter of Garage
 extern float STEP_TO_GARAGE_LENGTH;

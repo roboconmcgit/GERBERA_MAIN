@@ -40,6 +40,8 @@ float RAD_345_DEG = 6.0214; //
 float RAD_360_DEG = 6.2832; //
 float RAD_450_DEG = 7.8540;
 
+float RAD_88p5_DEG = 1.5446; //
+
 float DEAD_ZONE_LENGTH      =  800.0; //0910 tada
 
 //Parameter of Step
@@ -89,9 +91,11 @@ int   LUG_COL_VAL_OFFSET     = 60;
 int   LUG_COL_VAL_GAIN       = 2;
 float LUG_GRAY_TO_GARAGE     = 400;
 
+float LUG_GARAGE_OFFSET     = -0.2;
+
 //Parameter of Garage
 float STEP_TO_GARAGE_LENGTH = 1100;
-float LUG_TO_GARAGE_LENGTH  =  650;
+float LUG_TO_GARAGE_LENGTH  =  700;
 
 //Garage
 int   SONAR_DIST            = 75;
@@ -107,7 +111,7 @@ float FINAL_STRAIGHT_LENGTH = 2000;
 float CORNER_CHECK[5]={1.0, -2.0, 1.0, 1.0, 2.5};
 
 #else
-float FINAL_STRAIGHT_LENGTH = 1400.0;
+float FINAL_STRAIGHT_LENGTH = 1300.0;
 // Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line 
 float CORNER_CHECK[5]={1.0, -2.0, 2.0, 1.0, 1.0};
 

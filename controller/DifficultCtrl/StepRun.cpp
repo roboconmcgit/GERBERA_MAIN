@@ -112,17 +112,24 @@
        break;
    
      case Approach_to_Step:
-   
-       if(odo > ref_odo){
-         forward =  20;
-       }else{
-         forward =  70;
-       }
-   
-       yawratecmd = LineTracerYawrate((CL_SNSR_GAIN_GRAY*line_value));
-       if((angle >  RAD_90_DEG-0.2)&&(yawratecmd < 0) ){
-         yawratecmd = 0.0;
-       }
+
+     if(odo > ref_odo){
+      //      forward    =  20;
+      forward    =  40;
+
+      y_t        = -0.5*( RAD_88p5_DEG - angle);
+      yawratecmd = y_t;
+    }else{
+      forward =  70;
+      //forward =  30;
+      LineTracerYawrate((CL_SNSR_GAIN_GRAY * line_value));
+    }
+
+       //yawratecmd = LineTracerYawrate((CL_SNSR_GAIN_GRAY*line_value));
+       //yawratecmd = LineTracerYawrate((line_value));
+       if((angle >  (RAD_90_DEG))&&(yawratecmd < 0) ){
+        yawratecmd = 0.0;
+      }
    
        if(dansa){
          Step_Mode   = First_Dansa;

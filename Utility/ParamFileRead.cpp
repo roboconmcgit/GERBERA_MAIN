@@ -22,6 +22,9 @@ int ParamFileRead::setParameters(void){
     GetFileData_float("LUG_2nd_STOP", &LUG_2nd_STOP);
     GetFileData_float("LUG_3rd_STOP", &LUG_3rd_STOP);
     GetFileData_float("GARAGE_OFFSET_ANGLE", &GARAGE_OFFSET_ANGLE);
+    GetFileData_float("LUG_TO_GARAGE_LENGTH", &LUG_TO_GARAGE_LENGTH);
+    GetFileData_float("LUG_GARAGE_OFFSET", &LUG_GARAGE_OFFSET);
+    
     return 0;
 }
 
