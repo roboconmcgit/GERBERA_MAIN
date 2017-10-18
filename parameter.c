@@ -68,7 +68,7 @@ int   STBL_CNT_2nd_DANSA_ON   = 400;
 //LUG
 float APPROACH_TO_LUG_LENGTH = 900;
 //float STOP_POS_FROM_LUG      = 5;
-int STOP_POS_FROM_LUG      = 20;
+int STOP_POS_FROM_LUG      = 15;
 //float STOP_POS_FROM_LUG      = 25;
 int STOP_POS_APP_LUG      = 7;
 
@@ -91,7 +91,7 @@ int   LUG_COL_VAL_OFFSET     = 60;
 int   LUG_COL_VAL_GAIN       = 2;
 float LUG_GRAY_TO_GARAGE     = 400;
 
-float LUG_GARAGE_OFFSET     = -0.2;
+float LUG_GARAGE_OFFSET     = -0.3;
 
 //Parameter of Garage
 float STEP_TO_GARAGE_LENGTH = 1100;

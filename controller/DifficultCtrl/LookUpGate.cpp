@@ -131,7 +131,7 @@
        
        if(odo < ref_odo){
          forward         = 15;
-         y_t             = -2.0*(PAI - angle + LUG_GARAGE_OFFSET);
+         y_t             = -2.0*(PAI - angle);
          yawratecmd      = y_t;
          tail_stand_mode = true;
          tail_lug_mode  = false;
@@ -173,7 +173,7 @@
        if(forward >= 10){
          forward = 10;
        }
-       y_t = -2.0*(PAI - angle + LUG_GARAGE_OFFSET);
+       y_t = -2.0*(PAI - angle);
        yawratecmd = y_t;
    
        if(odo > ref_odo){
@@ -261,7 +261,7 @@
          forward = 10;
        }
    
-       y_t = -2.0*(0 - angle + LUG_GARAGE_OFFSET);
+       y_t = -2.0*(0 - angle);
        yawratecmd = y_t;
    
        if(odo > ref_odo){
